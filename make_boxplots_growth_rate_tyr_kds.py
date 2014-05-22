@@ -1,7 +1,5 @@
 #! /usr/bin/python
 
-#testing out git
+growth_data = sys.argv[1]
 
-#testing
-#test
-
+fh = open
