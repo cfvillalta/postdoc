@@ -15,7 +15,7 @@ for line in csv:
     line = line.strip()
     lines = line.split(",")
     data_name = lines[1]
-    data[data_names] = ''
+    data[data_name] = ''
 
     #print lines
     
