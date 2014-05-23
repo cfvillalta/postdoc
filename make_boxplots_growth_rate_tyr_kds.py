@@ -10,13 +10,22 @@ fh = open(growth_data)
 csv = fh.readlines()
 
 data = {}
+header = []
 
 for line in csv:
-    line = line.strip()
-    lines = line.split(",")
-    data_name = lines[1]
-    data[data_name] = ''
-
+    if line.startswith("pCV"):
+        line = line.strip()
+        lines = line.split(",")
+        data_name = lines[0]
+        data[data_name] = lines
+        
+    else:
+         line = line.strip()
+         lines = line.split(",")
+         header = lines
+        
     #print lines
     
-print data
+    #print data
+
+print header
