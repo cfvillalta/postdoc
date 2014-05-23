@@ -14,8 +14,9 @@ data = {}
 for line in csv:
     line = line.strip()
     lines = line.split(",")
-    data = lines[1]
+    data_name = lines[1]
+    data[data_names] = ''
 
     #print lines
     
-
+print data
