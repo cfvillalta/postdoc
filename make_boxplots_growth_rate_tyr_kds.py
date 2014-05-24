@@ -28,4 +28,15 @@ for line in csv:
     
     #print data
 
-print header
+    #print header
+
+#going to make boxplot
+from pylab import *
+
+boxplot_data = []
+
+for light in data:
+    boxplot_data = data[light][2]
+    
+
+boxplot(data)
