@@ -36,7 +36,9 @@ from pylab import *
 boxplot_data = []
 
 for light in data:
-    boxplot_data = data[light][2]
+    boxplot_data.append(float(data[light][2]))
     
 
-boxplot(data)
+print boxplot_data
+figure()
+boxplot(boxplot_data)
