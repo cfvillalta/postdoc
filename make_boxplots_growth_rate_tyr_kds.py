@@ -31,7 +31,13 @@ for line in csv:
     #print header
 
 #going to make boxplot
-from pylab import *
+#http://blog.bharatbhole.com/creating-boxplots-with-matplotlib/
+import numpy as np
+import matplotlib as mpl
+
+mpl.use('agg')
+
+import matplotlib.pyplot as plt
 
 boxplot_data = []
 
@@ -40,5 +46,12 @@ for light in data:
     
 
 print boxplot_data
-figure()
-boxplot(boxplot_data)
+
+fig = plt.figure(1, figsize=(9, 6))
+ax = fig.add_subplot(111)
+## Custom x-axis labels
+ax.set_xticklabels(['TYR1'])
+bp = ax.boxplot(boxplot_data)
+
+fig.savefig('fig1.png', bbox_inches='tight')
+
