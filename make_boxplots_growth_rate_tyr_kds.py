@@ -40,18 +40,22 @@ mpl.use('agg')
 import matplotlib.pyplot as plt
 
 boxplot_data = []
+tyrs = {}
+for tyr in data:
+    tyrs[data[tyr][1]]= ""
 
-for light in data:
-    boxplot_data.append(float(data[light][2]))
+
+print tyrs
+    # boxplot_data.append(float(data[tyr][1]))
     
 
-print boxplot_data
+    #print boxplot_data
 
-fig = plt.figure(1, figsize=(9, 6))
-ax = fig.add_subplot(111)
+    #fig = plt.figure(1, figsize=(9, 6))
+    #ax = fig.add_subplot(111)
 ## Custom x-axis labels
-ax.set_xticklabels(['TYR1'])
-bp = ax.boxplot(boxplot_data)
+#ax.set_xticklabels(['TYR1'])
+#bp = ax.boxplot(boxplot_data)
 
-fig.savefig('fig1.png', bbox_inches='tight')
+#fig.savefig('fig1.png', bbox_inches='tight')
 
