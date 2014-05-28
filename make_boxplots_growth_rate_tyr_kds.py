@@ -40,9 +40,11 @@ mpl.use('agg')
 import matplotlib.pyplot as plt
 
 boxplot_data = []
+
+#made a dictionary with the key as vector...tyr1...tyr2...
 tyrs = {}
 for tyr in data:
-    tyrs[data[tyr][1]]= ""
+    tyrs[data[tyr][2]]= ""
 
 
 print tyrs
