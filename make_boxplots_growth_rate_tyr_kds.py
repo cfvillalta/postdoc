@@ -64,14 +64,17 @@ for tyr in tyrs:
             #print sample
     # boxplot_data.append(float(data[tyr][1]))
             
-            print growth_by_tyr
+    # print growth_by_tyr
             
     #print boxplot_data
 
-    #fig = plt.figure(1, figsize=(9, 6))
-    #ax = fig.add_subplot(111)
+
+
+    x = growth_by_tyr.keys()
+    fig = plt.figure(1, figsize=(9, 6))
+    ax = fig.add_subplot(111)
 ## Custom x-axis labels
-#ax.set_xticklabels(['TYR1'])
+    ax.set_xticklabels(growth_by_tyr.keys())
 #bp = ax.boxplot(boxplot_data)
 
 #fig.savefig('fig1.png', bbox_inches='tight')
