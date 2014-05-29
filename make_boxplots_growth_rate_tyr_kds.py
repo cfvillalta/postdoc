@@ -16,7 +16,7 @@ for line in csv:
     if line.startswith("pCV"):
         line = line.strip()
         lines = line.split(",")
-        data_name = lines[0]
+        data_name = lines[1]
         data[data_name] = lines
         
     else:
@@ -24,11 +24,11 @@ for line in csv:
          lines = line.split(",")
          header = lines
         
-    #print lines
+         #print lines
     
-    #print data
+         #print data
 
-    #print header
+         #print header
 
 #going to make boxplot
 #http://blog.bharatbhole.com/creating-boxplots-with-matplotlib/
@@ -43,14 +43,28 @@ boxplot_data = []
 
 #made a dictionary with the key as vector...tyr1...tyr2...
 tyrs = {}
+growth_by_tyr = {}
 for tyr in data:
     tyrs[data[tyr][2]]= ""
+    growth_by_tyr[data[tyr][2]] = []
 
 
-print tyrs
+    #print tyrs
+    #print data
+
+#lengths grouped by tyrosinases
+for tyr in tyrs:
+    for sample in data:
+        # print sample
+        #print tyr
+        if tyr == data[sample][2]:
+            #growth_by_tyr[tyr] = append [data[sample]] 
+            #print tyr
+
+            #print sample
     # boxplot_data.append(float(data[tyr][1]))
     
-
+            print growth_by_tyr
     #print boxplot_data
 
     #fig = plt.figure(1, figsize=(9, 6))
@@ -60,4 +74,3 @@ print tyrs
 #bp = ax.boxplot(boxplot_data)
 
 #fig.savefig('fig1.png', bbox_inches='tight')
-
