@@ -60,11 +60,12 @@ for tyr in tyrs:
         if tyr == data[sample][2]:
             #growth_by_tyr[tyr] = append [data[sample]] 
             #print tyr
-
+            growth_by_tyr[tyr].append(data[sample][3])
             #print sample
     # boxplot_data.append(float(data[tyr][1]))
-    
+            
             print growth_by_tyr
+            
     #print boxplot_data
 
     #fig = plt.figure(1, figsize=(9, 6))
