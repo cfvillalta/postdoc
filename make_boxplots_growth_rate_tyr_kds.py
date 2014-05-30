@@ -4,6 +4,9 @@ import sys
 #input a file that is comma delimited csv.
 
 growth_data = sys.argv[1]
+file_name_split = growth_data.split("/")
+#print file_name_split[6]
+file_name_split_2 = file_name_split[6].split(".")
 
 fh = open(growth_data)
 
@@ -24,12 +27,6 @@ for line in csv:
          lines = line.split(",")
          header = lines
         
-         #print lines
-    
-         #print data
-
-         #print header
-
 #going to make boxplot
 #http://blog.bharatbhole.com/creating-boxplots-with-matplotlib/
 import numpy as np
@@ -62,28 +59,27 @@ for tyr in tyrs:
             #print tyr
             growth_by_tyr[tyr].append(float(data[sample][3]))
             #print sample
-    # boxplot_data.append(float(data[tyr][1]))
-            
-    # print growth_by_tyr
-            
-    #print boxplot_data
 
+tyr_sorted = []
+tyr_growth_sorted = []
 
+for x in sorted(growth_by_tyr):
+    tyr_sorted.append(x)
+    tyr_growth_sorted.append(growth_by_tyr[x])
 
-
-for x in sorted(growth_by_tyr)
-    print x
-
-
-
+    #print tyr_sorted
+    #print tyr_growth_sorted
 fig = plt.figure(1, figsize=(9, 6))
+#fig = plt.figure(1)
 ax = fig.add_subplot(111)
 ## Custom x-axis labels
-ax.set_xticklabels(growth_by_tyr.keys())
-
-x = growth_by_tyr.values()
-print x
-ax.boxplot(x)
-
+ax.set_xticklabels(tyr_sorted)
+ax.boxplot(tyr_growth_sorted)
+plt.axis(ymin=0,ymax=10)
+ax = plt.gca()
+ax.set_autoscale_on(False)
 plt.show()
-fig.savefig('fig1.png', bbox_inches='tight')
+#fig.savefig('fig1.png', bbox_inches='tight')
+
+boxplot_name = "%s.png" %(file_name_split_2[0])
+fig.savefig(boxplot_name)
