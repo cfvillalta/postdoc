@@ -71,6 +71,11 @@ for tyr in tyrs:
 
 
 
+for x in sorted(growth_by_tyr)
+    print x
+
+
+
 fig = plt.figure(1, figsize=(9, 6))
 ax = fig.add_subplot(111)
 ## Custom x-axis labels
