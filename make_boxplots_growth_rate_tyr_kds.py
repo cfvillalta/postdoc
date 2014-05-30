@@ -60,7 +60,7 @@ for tyr in tyrs:
         if tyr == data[sample][2]:
             #growth_by_tyr[tyr] = append [data[sample]] 
             #print tyr
-            growth_by_tyr[tyr].append(data[sample][3])
+            growth_by_tyr[tyr].append(float(data[sample][3]))
             #print sample
     # boxplot_data.append(float(data[tyr][1]))
             
@@ -70,11 +70,15 @@ for tyr in tyrs:
 
 
 
-    x = growth_by_tyr.keys()
-    fig = plt.figure(1, figsize=(9, 6))
-    ax = fig.add_subplot(111)
-## Custom x-axis labels
-    ax.set_xticklabels(growth_by_tyr.keys())
-#bp = ax.boxplot(boxplot_data)
 
-#fig.savefig('fig1.png', bbox_inches='tight')
+fig = plt.figure(1, figsize=(9, 6))
+ax = fig.add_subplot(111)
+## Custom x-axis labels
+ax.set_xticklabels(growth_by_tyr.keys())
+
+x = growth_by_tyr.values()
+print x
+ax.boxplot(x)
+
+plt.show()
+fig.savefig('fig1.png', bbox_inches='tight')
