@@ -42,9 +42,12 @@ boxplot_data = []
 tyrs = {}
 growth_by_tyr = {}
 for tyr in data:
-    tyrs[data[tyr][2]]= ""
-    growth_by_tyr[data[tyr][2]] = []
-
+    tyr_light = "%s_light" %(data[tyr][2])
+    tyr_dark = "%s_dark" %(data[tyr][2])
+    tyrs[tyr_light]= ""
+    tyrs[tyr_dark]= ""
+    growth_by_tyr[tyr_light] = []
+    growth_by_tyr[tyr_dark] = []
 
     #print tyrs
     #print data
@@ -54,14 +57,17 @@ for tyr in tyrs:
     for sample in data:
         # print sample
         #print tyr
-        if tyr == data[sample][2]:
+        if tyr == "%s_light" %(data[sample][2]):
             #growth_by_tyr[tyr] = append [data[sample]] 
-            #print tyr
             growth_by_tyr[tyr].append(float(data[sample][3]))
             #print sample
-
+        elif tyr == "%s_dark" %(data[sample][2]):
+            growth_by_tyr[tyr].append(float(data[sample][5]))
+            
 tyr_sorted = []
 tyr_growth_sorted = []
+
+print growth_by_tyr
 
 for x in sorted(growth_by_tyr):
     tyr_sorted.append(x)
