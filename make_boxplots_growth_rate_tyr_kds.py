@@ -97,4 +97,4 @@ fig.savefig(boxplot_name)
 
 
 #I want to count lengths of list in growth by tyr dict.
-#testing
+
