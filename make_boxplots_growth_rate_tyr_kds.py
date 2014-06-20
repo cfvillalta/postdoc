@@ -73,8 +73,8 @@ for x in sorted(growth_by_tyr):
     tyr_sorted.append(x)
     tyr_growth_sorted.append(growth_by_tyr[x])
 
-    #print tyr_sorted
-    #print tyr_growth_sorted
+    print tyr_sorted
+    print tyr_growth_sorted
 fig = plt.figure(1, figsize=(9, 6))
 #fig = plt.figure(1)
 ax = fig.add_subplot(111)
@@ -93,3 +93,7 @@ plt.show()
 plt.tight_layout()
 boxplot_name = "%s.png" %(file_name_split_2[0])
 fig.savefig(boxplot_name)
+
+
+
+#I want to count lengths of list in growth by tyr dict.
