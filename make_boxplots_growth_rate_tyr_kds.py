@@ -77,25 +77,29 @@ for x in sorted(growth_by_tyr):
     print tyr_bioreps
     print tyr_sorted
     print tyr_growth_sorted
-fig = plt.figure(1, figsize=(9, 6))
+
+
+    #fig = plt.figure(1, figsize=(9, 6))
 #fig = plt.figure(1)
-ax = fig.add_subplot(111)
+#ax = fig.add_subplot(111)
 ## Custom x-axis labels
-ax.set_xticklabels(tyr_sorted)
-ax.boxplot(tyr_growth_sorted)
-plt.axis(ymin=0,ymax=10)
-ax.set_xticklabels(tyr_sorted, rotation =90)
-ax.set_ylabel('radial growth in cm')
-ax.set_xlabel('tyroinase knockdowns grown in light or dark')
+#ax.set_xticklabels(tyr_sorted)
+#ax.boxplot(tyr_growth_sorted)
+#plt.axis(ymin=0,ymax=10)
+#ax.set_xticklabels(tyr_sorted, rotation =90)
+#ax.set_ylabel('radial growth in cm')
+#ax.set_xlabel('tyroinase knockdowns grown in light or dark')
 #ax = plt.gca()
 #ax.set_autoscale_on(False)
 
-plt.show()
+#plt.show()
 #fig.savefig('fig1.png', bbox_inches='tight')
-plt.tight_layout()
-boxplot_name = "%s.png" %(file_name_split_2[0])
-fig.savefig(boxplot_name)
+#plt.tight_layout()
+#boxplot_name = "%s.png" %(file_name_split_2[0])
+#fig.savefig(boxplot_name)
 
+plt.plot(tyr_growth_sorted,tyr_bioreps, 'ro')
+plt.show()
 
 
 #I want to count lengths of list in growth by tyr dict.
