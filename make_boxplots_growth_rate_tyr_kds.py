@@ -67,16 +67,17 @@ for tyr in tyrs:
 tyr_sorted = []
 tyr_growth_sorted = []
 tyr_bioreps = []
-print growth_by_tyr
+#print growth_by_tyr
 
 for x in sorted(growth_by_tyr):
     tyr_sorted.append(x)
     tyr_growth_sorted.extend(growth_by_tyr[x])
     bioreps = len(growth_by_tyr[x])
-    tyr_bioreps.extend(bioreps)
-    print tyr_bioreps
-    print tyr_sorted
-    print tyr_growth_sorted
+    tyr_bioreps.append(bioreps)
+
+print tyr_bioreps
+print tyr_sorted
+print tyr_growth_sorted
 
 
     #fig = plt.figure(1, figsize=(9, 6))
