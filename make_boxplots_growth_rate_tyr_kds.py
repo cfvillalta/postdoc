@@ -71,9 +71,9 @@ print growth_by_tyr
 
 for x in sorted(growth_by_tyr):
     tyr_sorted.append(x)
-    tyr_growth_sorted.append(growth_by_tyr[x])
+    tyr_growth_sorted.extend(growth_by_tyr[x])
     bioreps = len(growth_by_tyr[x])
-    tyr_bioreps.append(bioreps)
+    tyr_bioreps.extend(bioreps)
     print tyr_bioreps
     print tyr_sorted
     print tyr_growth_sorted
@@ -98,7 +98,7 @@ for x in sorted(growth_by_tyr):
 #boxplot_name = "%s.png" %(file_name_split_2[0])
 #fig.savefig(boxplot_name)
 
-plt.plot(tyr_growth_sorted,tyr_bioreps, 'ro')
+plt.plot(tyr_growth_sorted, tyr_bioreps, 'ro')
 plt.show()
 
 
