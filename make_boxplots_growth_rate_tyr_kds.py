@@ -31,6 +31,7 @@ for line in csv:
 #http://blog.bharatbhole.com/creating-boxplots-with-matplotlib/
 import numpy as np
 import matplotlib as mpl
+import pylab
 
 mpl.use('agg')
 
@@ -67,39 +68,47 @@ for tyr in tyrs:
 tyr_sorted = []
 tyr_growth_sorted = []
 tyr_bioreps = []
+tyr_sorted.append("")
 #print growth_by_tyr
 
+import random
+num = 0
 for x in sorted(growth_by_tyr):
+    num = num+1
+    print num
     tyr_sorted.append(x)
     tyr_growth_sorted.extend(growth_by_tyr[x])
     bioreps = len(growth_by_tyr[x])
-    tyr_bioreps.append(bioreps)
-
+    a=num-.2
+    b=num+.2
+    x_axis = [random.uniform(a,b) for p in range(0, bioreps)]
+    tyr_bioreps.extend(x_axis)
 print tyr_bioreps
 print tyr_sorted
 print tyr_growth_sorted
 
 
-    #fig = plt.figure(1, figsize=(9, 6))
-#fig = plt.figure(1)
-#ax = fig.add_subplot(111)
+
+fig = plt.figure(1, figsize=(9, 6))
+ax = fig.add_subplot(111)
 ## Custom x-axis labels
-#ax.set_xticklabels(tyr_sorted)
-#ax.boxplot(tyr_growth_sorted)
-#plt.axis(ymin=0,ymax=10)
-#ax.set_xticklabels(tyr_sorted, rotation =90)
-#ax.set_ylabel('radial growth in cm')
-#ax.set_xlabel('tyroinase knockdowns grown in light or dark')
-#ax = plt.gca()
+ax.set_xticklabels(tyr_sorted)
+
+ax.set_xticklabels(tyr_sorted, rotation =90)
+ax.set_ylabel('radial growth in cm')
+ax.set_xlabel('tyroinase knockdowns grown in light or dark')
+ax = plt.gca()
 #ax.set_autoscale_on(False)
 
-#plt.show()
-#fig.savefig('fig1.png', bbox_inches='tight')
-#plt.tight_layout()
-#boxplot_name = "%s.png" %(file_name_split_2[0])
-#fig.savefig(boxplot_name)
 
-plt.plot(tyr_growth_sorted, tyr_bioreps, 'ro')
+fig.savefig('fig1.png', bbox_inches='tight')
+plt.tight_layout()
+boxplot_name = "%s.png" %(file_name_split_2[0])
+fig.savefig(boxplot_name)
+
+
+plt.axis(ymin=0,ymax=10)
+plt.plot(tyr_bioreps, tyr_growth_sorted, 'ro')
 plt.show()
 
 
