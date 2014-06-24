@@ -79,8 +79,8 @@ for x in sorted(growth_by_tyr):
     tyr_sorted.append(x)
     tyr_growth_sorted.extend(growth_by_tyr[x])
     bioreps = len(growth_by_tyr[x])
-    a=num-.2
-    b=num+.2
+    a=num-.15
+    b=num+.15
     x_axis = [random.uniform(a,b) for p in range(0, bioreps)]
     tyr_bioreps.extend(x_axis)
 print tyr_bioreps
