@@ -104,13 +104,12 @@ ax = plt.gca()
 fig.savefig('fig1.png', bbox_inches='tight')
 plt.tight_layout()
 boxplot_name = "%s.png" %(file_name_split_2[0])
-fig.savefig(boxplot_name)
+
 
 
 plt.axis(ymin=0,ymax=10)
 plt.plot(tyr_bioreps, tyr_growth_sorted, 'ro')
+fig.savefig(boxplot_name)
 plt.show()
-
-
 #I want to count lengths of list in growth by tyr dict.
 
