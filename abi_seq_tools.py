@@ -1,6 +1,6 @@
 #! /usr/bin/python
 
-def trim(input_directory_here)
+def trim(input_directory_here):
 #will be a script where I input a batch of abi files and they are trimmed and out put as sequence files.x
 
     import sys
