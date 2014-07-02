@@ -13,7 +13,11 @@ handle = open(test_seq, 'rb')
 print handle
 
 for record in SeqIO.parse(handle, "abi"):
-   print record
+    print record.seq
+    
 
+   output_handle = open("test.fasta", "w")
+   SeqIO.write(record, output_handle, "fasta")
+   output_handle.close()
 
 
