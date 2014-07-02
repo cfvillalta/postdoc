@@ -10,10 +10,10 @@ from Bio import SeqIO
 test_seq = sys.argv[1]
 
 handle = open(test_seq, 'rb')
-print handle
 
 for record in SeqIO.AbiIO.AbiIterator(handle, trim = True):
     print record.seq
+    print record
 
     output_handle = open("test.fasta", "w")
     SeqIO.write(record, output_handle, "fasta")
