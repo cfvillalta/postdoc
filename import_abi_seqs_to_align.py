@@ -56,5 +56,47 @@ for line in file:
                    #print samples['CV190'][4]
                #print seqs
 
+#Need to input scaffold sequences. In this first case its pDG71_TYR1-TYR7 and vector, so 8 sequcnes. Will be in fasta format.
+import os
+from Bio import SeqIO
+from Bio import AlignIO
+from Bio.Alphabet import generic_dna
+from Bio.Seq import Seq
+from Bio.SeqRecord import SeqRecord
+from Bio.Align import MultipleSeqAlignment
 
+scaffold_seqs =  sys.argv[3]
+
+scaffolds = {}
+
+for file in os.listdir(scaffold_seqs):
+            file_path = "%s%s" %(scaffold_seqs,file)
         
+            handle = open(file_path, 'rU')
+
+            for record in SeqIO.parse(handle, 'fasta'):
+                #print record.id
+                scaffolds[record.name] = record
+
+                #print scaffolds
+seq_groups ={}
+                
+for sample in samples:
+    #print samples[sample][3]
+    reObj = re.compile(samples[sample][3])
+    for key in scaffolds:
+        if(reObj.search(key)):
+        #print key, samples[sample]
+            seq_groups[samples[sample][3]] = [scaffolds[key]]
+            
+
+for sample in samples:
+    #print samples[sample][3]
+    reObj = re.compile(samples[sample][3])
+    for key in scaffolds:
+        if(reObj.search(key)):
+        #print key, samples[sample]
+            
+            seq_groups[samples[sample][3]].append([samples[sample]])
+            
+print seq_groups['TYR5']
