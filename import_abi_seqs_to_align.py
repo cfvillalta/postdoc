@@ -30,22 +30,30 @@ for line in file:
 
     for sample in lines:
         x = sample.split('\t')
-        samples[x[0]]= x
         reObj =  re.compile(x[0])
         #print reObj
         for key in seqs.keys():
             
             
             if(reObj.search(key)):
-               print key, x[0]
+            #print key, x[0]
+            #  print x
+            #  print seqs[key].seq
                
+               if x[2] == 'FOR':
+                   #                   sequence = seqs[key].
+                   x.append(seqs[key].seq)
+                   samples[x[0]]= x
+               elif x[2] == 'REV':
+                   #print x
+                   #print seqs[key].seq
+                   #print seqs[key].seq.reverse_complement()
+                   x.append(seqs[key].seq.reverse_complement())
+                   samples[x[0]]= x
 
         
 
-
-        
-
-               #print samples
+                   #print samples['CV190'][4]
                #print seqs
 
 
