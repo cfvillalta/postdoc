@@ -59,11 +59,14 @@ for line in file:
 #Need to input scaffold sequences. In this first case its pDG71_TYR1-TYR7 and vector, so 8 sequcnes. Will be in fasta format.
 import os
 from Bio import SeqIO
-from Bio import AlignIO
-from Bio.Alphabet import generic_dna
+from Bio import Alphabet
+from Bio import Seq
+from Bio.Alphabet import IUPAC
+from Bio.Align import AlignInfo
+from Bio.Align.Generic import Alignment
+from Bio.Align import MultipleSeqAlignment
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
-from Bio.Align import MultipleSeqAlignment
 
 scaffold_seqs =  sys.argv[3]
 
@@ -97,6 +100,27 @@ for sample in samples:
         if(reObj.search(key)):
         #print key, samples[sample]
             
-            seq_groups[samples[sample][3]].append([samples[sample]])
+            seq_groups[samples[sample][3]].extend([samples[sample]])
+                        
+for group in seq_groups:
+    
+    for x in seq_groups[group]:
+        try:
+            file= open(('%s_%s.fasta')%(group, x.id),'w')
+            clustal_input = ''
+            clustal_input+=('>%s_%s\n'%(group, x.id))
+            clustal_input+=('%s\n'%(str(x.seq)))
+            file.write(clustal_input)
+            file.close()
+        except:
+            clustal_input = ''
+            file= open(('%s_%s.fasta')%(group, x[0]),'w')
+            clustal_input+=('>%s_%s\n'%(group, x[0]))
+            clustal_input+=('%s\n'%(str(x[4])))
+            file.write(clustal_input)
+            file.close()
+
+
+            #alignment = MultipleSeqAlignment(Alphabet.Gapped(IUPAC.unambiguous_dna))
             
-print seq_groups['TYR5']
+            #print clustal_input

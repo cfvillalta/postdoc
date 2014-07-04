@@ -20,7 +20,7 @@ def trim(input_directory_here):
 
 
 
-            for record in SeqIO.AbiIO.AbiIterator(handle, trim = True):
+            for record in SeqIO.AbiIO.AbiIterator(handle, trim = False):
                 #print record.id
                 #print 
                 #print record
