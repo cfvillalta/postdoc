@@ -117,7 +117,7 @@ for group in seq_groups:
             file= open(('%s_%s.fasta')%(group, x[0]),'w')
             clustal_input+=('>%s_%s\n'%(group, x[0]))
             clustal_input+=('%s\n'%(str(x[4])))
-            file.write(clustal_input)
+            file.write('%s/%s' %(directory_name,clustal_input))
             file.close()
 
 
