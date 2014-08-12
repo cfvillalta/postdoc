@@ -2,5 +2,15 @@
 
 import subprocess as sp
 import os
-from os import path
+import sys
 
+program = 'tar'
+
+folder_tars = sys.argv[1]
+print folder_tars
+
+files = os.listdir (folder_tars)
+
+
+for file in files:
+    print file
