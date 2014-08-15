@@ -106,7 +106,7 @@ for group in seq_groups:
     
     for x in seq_groups[group]:
         try:
-            file= open(('%s_%s.fasta')%(group, x.id),'w')
+            file= open(('%s/%s_%s.fasta')%(directory_name,group, x.id),'w')
             clustal_input = ''
             clustal_input+=('>%s_%s\n'%(group, x.id))
             clustal_input+=('%s\n'%(str(x.seq)))
@@ -114,10 +114,10 @@ for group in seq_groups:
             file.close()
         except:
             clustal_input = ''
-            file= open(('%s_%s.fasta')%(group, x[0]),'w')
+            file= open(('%s/%s_%s.fasta')%(directory_name,group, x[0]),'w')
             clustal_input+=('>%s_%s\n'%(group, x[0]))
             clustal_input+=('%s\n'%(str(x[4])))
-            file.write('%s/%s' %(directory_name,clustal_input))
+            file.write(clustal_input)
             file.close()
 
 

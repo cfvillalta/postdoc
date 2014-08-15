@@ -1,6 +1,6 @@
 #! /usr/bin/python/
 
-import subprocess as sp
+from subprocess import Popen
 import os
 import sys
 
@@ -11,6 +11,8 @@ print folder_tars
 
 files = os.listdir (folder_tars)
 
-
 for file in files:
-    print file
+    if file.endswith(".tar.gz"):
+        p = Popen([program,'-zxvf', '%s%s' %(folder_tars,file), '-C', '%s' %(folder_tars)])
+        p.communicate('file done being uncompressed')
+        
