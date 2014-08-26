@@ -21,5 +21,5 @@ output_clustal = open("%s.aln" %(file_name_split[0]), "w")
 alignment = AlignIO.parse(input_fasta, "fasta")
 AlignIO.write(alignment, output_clustal, "clustal")
 
-output_fasta.close()
-input_stockholm.close()
+output_clustal.close()
+input_fasta.close()
