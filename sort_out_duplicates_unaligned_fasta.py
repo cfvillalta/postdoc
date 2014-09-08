@@ -29,13 +29,13 @@ for seq in fa:
 
 for id in fa_id_key:
     seq = ''.join(fa_id_key[id])
-    fa_seq_key[seq] = id
+    fa_id_key[id] = seq
 
     #print fa_seq_key
 
 
 fa_out = open('%s_no_dups.fa' %(fa_in_split[0]), 'w')
 
-for seq in fa_seq_key:
-    fa_out.write('%s\n' %(fa_seq_key[seq]))
+for seq in fa_id_key:
     fa_out.write('%s\n' %(seq))
+    fa_out.write('%s\n' %(fa_id_key[seq]))
