@@ -94,8 +94,8 @@ cdt_mod = open("%s_mod.cdt" %(cdt_input_split[0]),'w')
 cdt_mod.write('%s\t\n' %(header))
 cdt_mod.write('%s\t\n' %(eweight))
 for row in sorted(cdt_dict.keys()):
-    print row
-    print cdt_dict[row]
+    #    print row
+    #print cdt_dict[row]
     cdt_mod.write('%s\t\n' %("\t".join(cdt_dict[row])))
 
 
