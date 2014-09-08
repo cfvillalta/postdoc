@@ -37,7 +37,7 @@ fasta_out.close()
 ###################################################################
 #Input fasta file and run fasttree, out put is newick tree
 ###################################################################
-'''
+
 print 'Starting FastTreeMP'
 FastTreeMP = Popen(['FastTreeMP', '-quiet', '-nopr', '-log', '%s.log' %(aligned_fasta_file_split[0]), '%s.fasta' %(aligned_fasta_file_split[0])],stdout=PIPE)
 newick_out = open("%s.newick" %(aligned_fasta_file_split[0]), 'w')
@@ -89,7 +89,7 @@ for x in uniq_GID_name_dict:
     #print '%s\t%s\t%s' %(x, uniq_GID_name_dict[x][0], uniq_GID_name_dict[x][1])
 print 'done making dictionary of GID = taxID'
 GID_tax.close()
-'''
+
 tree_text = open('%s.newick' %(aligned_fasta_file_split[0]), 'r')
 
 GID_tax_in  = open('%s_GID_taxID.out' %(aligned_fasta_file_split[0]),'r')
@@ -143,7 +143,7 @@ for GID in num_list:
         line = line.replace(uniq_GID_name_dict2[GID][0], '%s' %(uniq_GID_name_dict2[GID][1]))
         print y
     elif y>roof:
-        tree_out = open('%s_no_dup_align_tax.newick' %(aligned_fasta_file_split[0]), 'w')
+        tree_out = open('%s_taxid_mod.newick' %(aligned_fasta_file_split[0]), 'w')
         tree_out.write('%s'%(line))
         tree_out.close()
         
