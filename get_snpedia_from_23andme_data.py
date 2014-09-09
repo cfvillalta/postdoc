@@ -49,7 +49,7 @@ print 'all done'
 
 snp_no_data = open('list_snps_no_snpedia_data.list','w')
 for snp in snps_no_snpedia:
-    snp_no_data.write("snp\n")
+    snp_no_data.write("%s\n" %(snp))
     
 #print snps_no_snpedia
 snp_no_data.close()
