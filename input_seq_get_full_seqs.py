@@ -27,6 +27,7 @@ seqs = fasta.readlines()
 
 seqs_dict = {}
 id = ''
+print 'Get Full Seqs'
 for line in seqs:
 
     if line.startswith('>'):
@@ -54,4 +55,13 @@ for line in seqs:
 fasta = open('%s_unaligned.fa' %(aligned_fasta_file_split[0]), 'w')
 for seq in seqs_dict:
     fasta.write('>%s\n%s' %(seq,seqs_dict[seq][1]))
+
+fasta.close()
           
+#run muscle
+print 'Done getting Full Seqs'
+print 'Begin Muscle'
+muscle = Popen(['time','muscle3.8.31_i86darwin64', '-in', '%s_unaligned.fa' %(aligned_fasta_file_split[0]), '-out', '%s_aligned.fa' %(aligned_fasta_file_split[0])])
+muscle.communicate()
+print 'Done with muscle'
+print 'Begin FastTreeMP'
