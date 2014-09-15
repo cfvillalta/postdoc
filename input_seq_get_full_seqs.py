@@ -34,11 +34,18 @@ for line in seqs:
         match = gid.search(line)
         if match:
             id = match.group(2)
-            seqs_dict[id]=[]
+            p = Popen(['blastdbcmd', '-db', 'nr', '-dbtype', 'prot', '-entry', id, '-target_only','-outfmt', '%t\t%s'],stdout = PIPE)
+            stdout = p.stdout.read()
+            p.communicate()
+            if stdout:
+                stdout_split = stdout.split("\t")
+                seqs_dict[id]= stdout_split
+            else:
+                pass
         else:
             pass
     else:
         pass
 
-#print seqs_dict
+print seqs_dict
 
