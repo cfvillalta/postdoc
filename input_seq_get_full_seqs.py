@@ -20,6 +20,7 @@ import re
 aligned_fasta_file = sys.argv[1]
 aligned_fasta_file_split = aligned_fasta_file.split(".")
 
+
 fasta = open(aligned_fasta_file, 'rU')
 
 seqs = fasta.readlines()
@@ -30,7 +31,7 @@ for line in seqs:
 
     if line.startswith('>'):
         gid = re.compile(r"(>)(\d+)(/)")
-        print line
+#        print line
         match = gid.search(line)
         if match:
             id = match.group(2)
@@ -46,6 +47,11 @@ for line in seqs:
             pass
     else:
         pass
+#made this because I might use taxID later but dont want the name to get cut in the muscle alignment or fastree.
 
-print seqs_dict
+#print seqs_dict
 
+fasta = open('%s_unaligned.fa' %(aligned_fasta_file_split[0]), 'w')
+for seq in seqs_dict:
+    fasta.write('>%s\n%s' %(seq,seqs_dict[seq][1]))
+          
