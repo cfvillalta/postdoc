@@ -11,7 +11,6 @@ import re
 from Bio import Phylo
 from subprocess import Popen, PIPE
 import os
-import re
 
 ###################################################################
 #input fasta file and get rid of some duplicates and output new 
