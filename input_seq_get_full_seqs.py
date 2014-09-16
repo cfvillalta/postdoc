@@ -64,4 +64,16 @@ print 'Begin Muscle'
 muscle = Popen(['time','muscle3.8.31_i86darwin64', '-in', '%s_unaligned.fa' %(aligned_fasta_file_split[0]), '-out', '%s_aligned.fa' %(aligned_fasta_file_split[0])])
 muscle.communicate()
 print 'Done with muscle'
+
+#run fasttree
 print 'Begin FastTreeMP'
+
+FastTreeMP = Popen(['FastTreeMP', '-quiet', '-nopr', '-log', '%s.log' %(aligned_fasta_file_split[0]), '%s_aligned.fa' %(aligned_fasta_file_split[0])],stdout=PIPE)
+newick_out = open("%s.newick" %(aligned_fasta_file_split[0]), 'w')
+newick_out.write(FastTreeMP.stdout.read())
+
+FastTreeMP.communicate()
+newick_out.close()
+print 'Done with FastTreeMP'
+
+
