@@ -32,3 +32,15 @@ for line in seqs:
         start = match.group(4)
 #        print match.group(5)
         end = match.group(5)
+        
+        if gid in seqs_dict:
+           if float(seqs_dict[gid][0]) < float(start):
+               #work on ending]
+               
+    
+        else:
+            seqs_dict[gid] = [start, end]
+
+
+print seqs_dict
+
