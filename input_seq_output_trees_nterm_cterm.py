@@ -22,7 +22,13 @@ seqs = fasta.readlines()
 seqs_dict= {}
 
 for line in seqs:
-    gid = re.compile(r"(>)(\d+)(/)")
+    gid = re.compile(r"(>)(\d+)(/)(\d+)\-(\d+)")
     match = gid.search(line)
     if match:
-        print match.group(2)
+#        print line
+#        print match.group(2)
+        gid = match.group(2)
+#        print match.group(4)
+        start = match.group(4)
+#        print match.group(5)
+        end = match.group(5)
