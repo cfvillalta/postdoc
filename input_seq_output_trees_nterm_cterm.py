@@ -22,6 +22,7 @@ seqs = fasta.readlines()
 seqs_dict = {}
 
 for line in seqs:
+#    print line.strip()
     gid = re.compile(r"(>)(\d+)(/)(\d+)\-(\d+)")
     match = gid.search(line)
     if match:
@@ -82,7 +83,8 @@ for gid in seqs_dict:
 #print 'single domains'
 #print seqs_dict_sd
 
-#first will work on seqs in multiple domain library.
+#first will work on seqs in multiple domain library. Then on the single domain.
+#order in dict is: gid is key, start, end, # domains, full seq, nterm, cterm, taxid
 
 for gid in seqs_dict_md:
     p = Popen(['blastdbcmd', '-db', 'nr', '-dbtype', 'prot', '-entry', gid, '-target_only','-outfmt', '%t\t%s'],stdout = PIPE)
@@ -91,7 +93,35 @@ for gid in seqs_dict_md:
     if stdout:
         stdout=stdout.strip()
         stdout_split = stdout.split("\t")
-        print stdout_split
+        start = seqs_dict_md[gid][0]
+        end = seqs_dict_md[gid][1]
+        #I did -1 because its one less since its python and its also one less because the start number is the start of the tyrosinase domain. Check by looking at output.
+        nterm = stdout_split[1][0:int(start)-1]
+        #cterm is just end because if I subtract 1 i get what end is.
+        cterm = stdout_split[1][int(end):]
+        seqs_dict_md[gid].append(nterm)
+        seqs_dict_md[gid].append(cterm)
+        seqs_dict_md[gid].append(stdout_split[0])
+#        print gid
+#        print stdout_split[1]
+#        print nterm
+#        print end 
+#        print cterm
+        if gid in seqs_dict_sd:
+            nterm = stdout_split[1][0:int(start)-1]
+            cterm = stdout_split[1][int(end):]
+            seqs_dict_md[gid].append(nterm)
+            seqs_dict_md[gid].append(cterm)
+            seqs_dict_md[gid].append(stdout_split[0])
+            #        print gid
+            #        print stdout_split[1]
+            #        print nterm
+            #        print end 
+            #        print cterm
+
+
     else:
         pass
 
+print seqs_dict_md
+print seqs_dict_md
