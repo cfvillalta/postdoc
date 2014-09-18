@@ -149,17 +149,18 @@ fasta_cterm_sd.close()
 #one issue with script if I have two results it considers it two domains. Still need to figure out a way to weed out duplicates. Maybe ask if domains overlap or something before I start looking at number of domains. 
 #Found one instance where tyrosinase domains are the same just off by one domain and another instance where two domains are called but overlap maybe two domains that overlap or something.
 
-'''
+
 #run with md seqs first
 #clustalo
-print 'begin clustalo'
-clustalo = Popen(['time', 'clustalo', '-i', '%s_unaligned.fa' %(aligned_fasta_file_split[0]), '-o', '%s_aligned_clustalo.fa' %(aligned_fasta_file_split[0]), '--force'])
-clustalo.communicate()
-print clustalo
+print 'begin clustalo_nterm_md'
+clustalo_nterm_md = Popen(['time', 'clustalo', '-i', '%s_nterm_multiple_domains_unaligned.fasta' %(file_split[0]), '-o', '%s_nterm_multople_domains_aligned_clustalo.fa' %(file_split[0]), '--force'])
+clustalo_nterm_md.communicate()
+print 'done clustalo_nterm_md'
+
+'''
 #run fasttree
 print 'done with clustalo'
 print 'Begin FastTreeMP'
-
 FastTreeMP = Popen(['FastTreeMP', '-quiet', '-nopr', '-log', '%s.log' %(aligned_fasta_file_split[0]), '%s_aligned_clustalo.fa' %(aligned_fasta_file_split[0])],stdout=PIPE)
 newick_out = open("%s_clustalo.newick" %(aligned_fasta_file_split[0]), 'w')
 newick_out.write(FastTreeMP.stdout.read())
