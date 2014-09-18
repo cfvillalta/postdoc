@@ -62,11 +62,25 @@ for line in seqs:
             seqs_dict[gid] = [start, end, n]
 
 
-print seqs_dict
+#print seqs_dict
 
 #md = multiple domains
 seqs_dict_md= {}
 #sd = single domains
 seqs_dict_sd = {}
 
+for gid in seqs_dict:
+    if seqs_dict[gid][2] == 1:
+        seqs_dict_sd[gid]= seqs_dict[gid]
+        seqs_dict_md[gid]= seqs_dict[gid]
+    elif seqs_dict[gid][2] > 1:
+        seqs_dict_md[gid]= seqs_dict[gid]
+
+
+#print 'multiple domains'
+#print seqs_dict_md
+#print 'single domains'
+#print seqs_dict_sd
+
+#first will work on seqs in multiple domain library.
 
