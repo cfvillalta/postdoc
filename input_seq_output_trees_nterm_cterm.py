@@ -84,7 +84,7 @@ for gid in seqs_dict:
 #print seqs_dict_sd
 
 #first will work on seqs in multiple domain library. Then on the single domain.
-#order in dict is: gid is key, start, end, # domains, full seq, nterm, cterm, taxid
+#order in dict is: gid is key, start, end, # domains, nterm, cterm, taxid
 
 for gid in seqs_dict_md:
     p = Popen(['blastdbcmd', '-db', 'nr', '-dbtype', 'prot', '-entry', gid, '-target_only','-outfmt', '%t\t%s'],stdout = PIPE)
@@ -123,5 +123,49 @@ for gid in seqs_dict_md:
     else:
         pass
 
-print seqs_dict_md
-print seqs_dict_md
+#print seqs_dict_md
+#print seqs_dict_sd
+
+#outpout md and sd sequence files for nterm and cterm
+fasta_nterm_md = open('%s_nterm_multiple_domains_unaligned.fasta'%(file_split[0]),'w')
+fasta_cterm_md = open('%s_cterm_multiple_domains_unaligned.fasta'%(file_split[0]),'w')
+fasta_nterm_sd = open('%s_nterm_single_domain_unaligned.fasta'%(file_split[0]),'w')
+fasta_cterm_sd = open('%s_cterm_single_domain_unaligned.fasta'%(file_split[0]),'w')
+
+for gid in seqs_dict_md:
+    fasta_nterm_md.write(">%s\n%s\n" %(gid, seqs_dict_md[gid][3]))
+    fasta_cterm_md.write(">%s\n%s\n" %(gid, seqs_dict_md[gid][4]))
+    if gid in seqs_dict_sd:
+        fasta_nterm_sd.write(">%s\n%s\n" %(gid, seqs_dict_sd[gid][3]))
+        fasta_cterm_sd.write(">%s\n%s\n" %(gid, seqs_dict_sd[gid][4]))
+fasta_nterm_md.close()
+fasta_cterm_md.close()
+fasta_nterm_sd.close()
+fasta_cterm_sd.close()
+
+
+
+
+#one issue with script if I have two results it considers it two domains. Still need to figure out a way to weed out duplicates. Maybe ask if domains overlap or something before I start looking at number of domains. 
+#Found one instance where tyrosinase domains are the same just off by one domain and another instance where two domains are called but overlap maybe two domains that overlap or something.
+
+'''
+#run with md seqs first
+#clustalo
+print 'begin clustalo'
+clustalo = Popen(['time', 'clustalo', '-i', '%s_unaligned.fa' %(aligned_fasta_file_split[0]), '-o', '%s_aligned_clustalo.fa' %(aligned_fasta_file_split[0]), '--force'])
+clustalo.communicate()
+print clustalo
+#run fasttree
+print 'done with clustalo'
+print 'Begin FastTreeMP'
+
+FastTreeMP = Popen(['FastTreeMP', '-quiet', '-nopr', '-log', '%s.log' %(aligned_fasta_file_split[0]), '%s_aligned_clustalo.fa' %(aligned_fasta_file_split[0])],stdout=PIPE)
+newick_out = open("%s_clustalo.newick" %(aligned_fasta_file_split[0]), 'w')
+newick_out.write(FastTreeMP.stdout.read())
+
+FastTreeMP.communicate()
+newick_out.close()
+print 'Done with FastTreeMP'
+
+'''
