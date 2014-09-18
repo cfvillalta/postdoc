@@ -71,6 +71,7 @@ print 'Done getting Full Seqs'
 #clustalo
 print 'begin clustalo'
 clustalo = Popen(['time', 'clustalo', '-i', '%s_unaligned.fa' %(aligned_fasta_file_split[0]), '-o', '%s_aligned_clustalo.fa' %(aligned_fasta_file_split[0]), '--force'])
+clustalo.communicate()
 print clustalo
 #run fasttree
 print 'done with clustalo'
