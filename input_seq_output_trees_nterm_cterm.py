@@ -19,7 +19,7 @@ fasta = open(fasta_file,'rU')
 
 seqs = fasta.readlines()
 
-seqs_dict= {}
+seqs_dict = {}
 
 for line in seqs:
     gid = re.compile(r"(>)(\d+)(/)(\d+)\-(\d+)")
@@ -35,12 +35,38 @@ for line in seqs:
         
         if gid in seqs_dict:
            if float(seqs_dict[gid][0]) < float(start):
-               #work on ending]
+               if float(seqs_dict[gid][1])> float(end):
+#                   print "%s\t%s\t%s\n" %(gid, seqs_dict[gid][0], end)
+ #                  print line 
+                   seqs_dict[gid]=[seqs_dict[gid][0],seqs_dict[gid][1],seqs_dict[gid][2]+1]
+               else:
+  #                 print "%s\t%s\t%s\n" %(gid,seqs_dict[gid][0],end)
+   #                print line
+                   seqs_dict[gid]=[seqs_dict[gid][0],end,seqs_dict[gid][2]+1]
+           else:
+               if float(seqs_dict[gid][1])> float(end):
+    #               print "%s\t%s\t%s\n" %(gid, start, end)
+     #              print line 
+                   seqs_dict[gid]=[start,seqs_dict[gid][1],seqs_dict[gid][2]+1]
+               else:
+      #             print "%s\t%s\t%s\n" %(gid,start,end)
+       #            print line
+                   seqs_dict[gid]=[start,end,seqs_dict[gid][2]+1]
+                   
+                         
                
     
         else:
-            seqs_dict[gid] = [start, end]
+            #n= number of domains
+            n = 1
+            seqs_dict[gid] = [start, end, n]
 
 
 print seqs_dict
+
+#md = multiple domains
+seqs_dict_md= {}
+#sd = single domains
+seqs_dict_sd = {}
+
 
