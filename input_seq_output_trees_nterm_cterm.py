@@ -84,3 +84,14 @@ for gid in seqs_dict:
 
 #first will work on seqs in multiple domain library.
 
+for gid in seqs_dict_md:
+    p = Popen(['blastdbcmd', '-db', 'nr', '-dbtype', 'prot', '-entry', gid, '-target_only','-outfmt', '%t\t%s'],stdout = PIPE)
+    stdout = p.stdout.read()
+    p.communicate()
+    if stdout:
+        stdout=stdout.strip()
+        stdout_split = stdout.split("\t")
+        print stdout_split
+    else:
+        pass
+
