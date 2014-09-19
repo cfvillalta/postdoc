@@ -85,7 +85,9 @@ for gid in seqs_dict:
 
 #first will work on seqs in multiple domain library. Then on the single domain.
 #order in dict is: gid is key, start, end, # domains, nterm, cterm, taxid
-
+seqs_dict_md_2 = {}
+seqs_dict_sd_2 = {}
+'''
 for gid in seqs_dict_md:
     p = Popen(['blastdbcmd', '-db', 'nr', '-dbtype', 'prot', '-entry', gid, '-target_only','-outfmt', '%t\t%s'],stdout = PIPE)
     stdout = p.stdout.read()
@@ -99,9 +101,10 @@ for gid in seqs_dict_md:
         nterm = stdout_split[1][0:int(start)-1]
         #cterm is just end because if I subtract 1 i get what end is.
         cterm = stdout_split[1][int(end):]
-        seqs_dict_md[gid].append(nterm)
-        seqs_dict_md[gid].append(cterm)
-        seqs_dict_md[gid].append(stdout_split[0])
+        seqs_dict_md_2[gid]= [seqs_dict_md[gid][0],seqs_dict_md[gid][1],seqs_dict_md[gid][2],nterm,cterm,stdout_split[0]]
+#        seqs_dict_md[gid].append(nterm)
+#        seqs_dict_md[gid].append(cterm)
+#        seqs_dict_md[gid].append(stdout_split[0])
 #        print gid
 #        print stdout_split[1]
 #        print nterm
@@ -110,18 +113,21 @@ for gid in seqs_dict_md:
         if gid in seqs_dict_sd:
             nterm = stdout_split[1][0:int(start)-1]
             cterm = stdout_split[1][int(end):]
-            seqs_dict_md[gid].append(nterm)
-            seqs_dict_md[gid].append(cterm)
-            seqs_dict_md[gid].append(stdout_split[0])
+            seqs_dict_sd_2[gid]= [seqs_dict_sd[gid][0],seqs_dict_sd[gid][1],seqs_dict_sd[gid][2],nterm,cterm,stdout_split[0]]
+ #           seqs_dict_sd[gid].append(nterm)
+ #           seqs_dict_sd[gid].append(cterm)
+ #           seqs_dict_sd[gid].append(stdout_split[0])
             #        print gid
             #        print stdout_split[1]
             #        print nterm
             #        print end 
             #        print cterm
 
-
     else:
         pass
+#        del seqs_dict_md[gid]
+#        if gid in seqs_dict_sd:
+#            del seqs_dict_sd[gid]
 
 #print seqs_dict_md
 #print seqs_dict_sd
@@ -132,18 +138,18 @@ fasta_cterm_md = open('%s_cterm_multiple_domains_unaligned.fasta'%(file_split[0]
 fasta_nterm_sd = open('%s_nterm_single_domain_unaligned.fasta'%(file_split[0]),'w')
 fasta_cterm_sd = open('%s_cterm_single_domain_unaligned.fasta'%(file_split[0]),'w')
 
-for gid in seqs_dict_md:
-    fasta_nterm_md.write(">%s\n%s\n" %(gid, seqs_dict_md[gid][3]))
-    fasta_cterm_md.write(">%s\n%s\n" %(gid, seqs_dict_md[gid][4]))
-    if gid in seqs_dict_sd:
-        fasta_nterm_sd.write(">%s\n%s\n" %(gid, seqs_dict_sd[gid][3]))
-        fasta_cterm_sd.write(">%s\n%s\n" %(gid, seqs_dict_sd[gid][4]))
+for gid in seqs_dict_md_2:
+    fasta_nterm_md.write(">%s\n%s\n" %(gid, seqs_dict_md_2[gid][3]))
+    fasta_cterm_md.write(">%s\n%s\n" %(gid, seqs_dict_md_2[gid][4]))
+    if gid in seqs_dict_sd_2:
+        fasta_nterm_sd.write(">%s\n%s\n" %(gid, seqs_dict_sd_2[gid][3]))
+        fasta_cterm_sd.write(">%s\n%s\n" %(gid, seqs_dict_sd_2[gid][4]))
 fasta_nterm_md.close()
 fasta_cterm_md.close()
 fasta_nterm_sd.close()
 fasta_cterm_sd.close()
 
-
+'''
 
 
 #one issue with script if I have two results it considers it two domains. Still need to figure out a way to weed out duplicates. Maybe ask if domains overlap or something before I start looking at number of domains. 
@@ -153,6 +159,7 @@ fasta_cterm_sd.close()
 #run with md seqs first
 #clustalo
 print 'begin clustalo_nterm_md'
+print '%s_nterm_multiple_domains_unaligned.fasta' %(file_split[0])
 clustalo_nterm_md = Popen(['time', 'clustalo', '-i', '%s_nterm_multiple_domains_unaligned.fasta' %(file_split[0]), '-o', '%s_nterm_multople_domains_aligned_clustalo.fa' %(file_split[0]), '--force'])
 clustalo_nterm_md.communicate()
 print 'done clustalo_nterm_md'
