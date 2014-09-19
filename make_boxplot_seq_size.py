@@ -25,8 +25,18 @@ for line in seqs:
         seqs_dict[seq_id].append(line)
 
 
-print seqs_dict
+#print seqs_dict
 
 for seq in seqs_dict:
     length = len(seqs_dict[seq][0])
     print length
+    seqs_dict[seq].append(length)
+
+#print seqs_dict
+
+#going to make boxplot
+#http://blog.bharatbhole.com/creating-boxplots-with-matplotlib/
+import numpy as np
+import matplotlib as mpl
+import pylab
+
