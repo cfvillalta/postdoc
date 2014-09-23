@@ -33,7 +33,7 @@ import numpy as np
 import matplotlib as mpl
 import pylab
 
-mpl.use('agg')
+#mpl.use('agg')
 
 import matplotlib.pyplot as plt
 

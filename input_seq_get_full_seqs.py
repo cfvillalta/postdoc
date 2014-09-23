@@ -19,7 +19,7 @@ import os
 aligned_fasta_file = sys.argv[1]
 aligned_fasta_file_split = aligned_fasta_file.split(".")
 
-
+'''
 fasta = open(aligned_fasta_file, 'rU')
 
 seqs = fasta.readlines()
@@ -76,9 +76,9 @@ print clustalo
 #run fasttree
 print 'done with clustalo'
 print 'Begin FastTreeMP'
-
-FastTreeMP = Popen(['FastTreeMP', '-quiet', '-nopr', '-log', '%s.log' %(aligned_fasta_file_split[0]), '%s_aligned.fa' %(aligned_fasta_file_split[0])],stdout=PIPE)
-newick_out = open("%s.newick" %(aligned_fasta_file_split[0]), 'w')
+'''
+FastTreeMP = Popen(['FastTreeMP', '-quiet', '-nopr', '-log', '%s.log' %(aligned_fasta_file_split[0]), '%s_aligned_clustalo.fa' %(aligned_fasta_file_split[0])],stdout=PIPE)
+newick_out = open("%s_clustalo.newick" %(aligned_fasta_file_split[0]), 'w')
 newick_out.write(FastTreeMP.stdout.read())
 
 FastTreeMP.communicate()

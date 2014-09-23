@@ -26,12 +26,12 @@ for line in seqs:
 
 
 #print seqs_dict
-
+boxplot_data = []
 for seq in seqs_dict:
     length = len(seqs_dict[seq][0])
-    print length
+#    print length
     seqs_dict[seq].append(length)
-
+    boxplot_data.append(length)
 #print seqs_dict
 
 #going to make boxplot
@@ -39,4 +39,35 @@ for seq in seqs_dict:
 import numpy as np
 import matplotlib as mpl
 import pylab
+
+#mpl.use('agg')
+
+import matplotlib.pyplot as plt
+
+fig = plt.figure(1, figsize=(9, 6))
+ax = fig.add_subplot(111)
+## Custom x-axis labels
+#ax.set_xticklabels(tyr_sorted)
+
+#ax.set_xticklabels(tyr_sorted, rotation =90)
+#ax.set_ylabel('radial growth in cm')
+#ax.set_xlabel('tyroinase knockdowns grown in light or dark')
+#ax = plt.gca()
+#ax.set_autoscale_on(False)
+
+
+
+boxplot_name = "testing.png"
+
+array = np.array(boxplot_data)
+print array
+median = np.percentile(array, 50)
+first_q = np.percentile(array, 25)
+print first_q
+print median
+#plt.axis(ymin=0,ymax=10)
+plt.boxplot(boxplot_data)
+fig.savefig(boxplot_name)
+#plt.show()
+
 
