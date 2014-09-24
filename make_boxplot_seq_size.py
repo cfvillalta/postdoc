@@ -46,28 +46,72 @@ import matplotlib.pyplot as plt
 
 fig = plt.figure(1, figsize=(9, 6))
 ax = fig.add_subplot(111)
-## Custom x-axis labels
-#ax.set_xticklabels(tyr_sorted)
 
-#ax.set_xticklabels(tyr_sorted, rotation =90)
-#ax.set_ylabel('radial growth in cm')
-#ax.set_xlabel('tyroinase knockdowns grown in light or dark')
-#ax = plt.gca()
-#ax.set_autoscale_on(False)
-
-
+num=0
+tot = 0
+boxplot_data_no_zero = []
+for x in boxplot_data:
+    tot = tot+1
+    if x == 0:
+       num=num +1 
+    else:
+       boxplot_data_no_zero.append(x)
+       
+print "seqs with 0 nterm %s" %(num)
+print "total seqs %s" %(tot)
 
 boxplot_name = "testing.png"
 
-array = np.array(boxplot_data)
-print array
+array = np.array(sorted(boxplot_data))
+#print array
 median = np.percentile(array, 50)
 first_q = np.percentile(array, 25)
-print first_q
-print median
-#plt.axis(ymin=0,ymax=10)
+third_q =  np.percentile(array, 75)
+IQR = third_q -first_q
+lower_fence = first_q - (1.5*(IQR))
+upper_fence = third_q + (1.5*(IQR))
+print "first quartile = %s" %(first_q)
+print "median = %s" %(median)
+print "third quartile = %s" %(third_q)
+print "IQR = %s" %(IQR)
+print "lower fence = %s" %(lower_fence)
+print "upper fence = %s" %(upper_fence)
+
+group = []
+group.extend(range(1,101))
+
+for p in group: 
+    num_1 = 0
+    tot_1 = 0
+    num_2 = 0
+    percentile = np.percentile(array,p)
+    for x in boxplot_data:
+        tot_1 = tot_1+1
+        if x < percentile:
+            num_1=num_1 +1
+        elif x > percentile:
+            num_2 = num_2+1
+    print "%s percentile is: %s seqs below this percentile = %s above percentile = %s" %(p,  np.percentile(array,p), num_1, num_2)
+
+print tot_1
+
 plt.boxplot(boxplot_data)
 fig.savefig(boxplot_name)
-#plt.show()
+plt.show()
 
+boxplot_data = sorted(boxplot_data)
+#print np.median(array)
+#print boxplot_data[3202]
+#print boxplot_data[3203]
+#print boxplot_data[3204]
+#print med
 
+var = raw_input( "What percentile should I cut off at? (Insert a number no percentage sign, between 1-100)")
+
+print "You entered %s" %(var)
+
+if (int(var) > 0) and (int(var) <= 100):
+    print "number within range, will extract sequences above the %s percentile." %(var)
+else:
+
+    print "number not within range"
