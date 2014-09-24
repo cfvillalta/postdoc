@@ -97,8 +97,7 @@ print tot_1
 
 plt.boxplot(boxplot_data)
 fig.savefig(boxplot_name)
-plt.draw()
-
+plt.show(block=False)
 boxplot_data = sorted(boxplot_data)
 #print np.median(array)
 #print boxplot_data[3202]
@@ -106,13 +105,13 @@ boxplot_data = sorted(boxplot_data)
 #print boxplot_data[3204]
 #print med
 
+print "Save plot if you don't want it to close before entering percentile."
 var = raw_input( "What percentile should I cut off at? (Insert a number no percentage sign, between 1-100)")
 
 print "You entered %s" %(var)
 
 
 seqs_above_per = {}
-
 if (int(var) > 0) and (int(var) <= 100):
     print "number within range, will extract sequences above the %s percentile." %(var)
     
