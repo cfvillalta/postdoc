@@ -121,3 +121,4 @@ else:
 
     print "number not within range"
 
+print seqs_dict
