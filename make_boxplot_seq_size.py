@@ -6,6 +6,7 @@ import sys
 import re
 
 fasta_in = sys.argv[1]
+fasta_in_split = fasta_in.split(".")
 fasta = open(fasta_in, 'rU')
 seqs = fasta.readlines()
 
@@ -121,4 +122,12 @@ else:
 
     print "number not within range"
 
-print seqs_above_per
+    #print seqs_above_per
+
+
+new_seq_file = open("%s_%s_percentile.fa" %(fasta_in_split[0],var),'w')
+for seq in seqs_above_per:
+    new_seq_file.write(">%s\n%s\n" %(seq, seqs_above_per[seq][0]))
+
+new_seq_file.close()
+    
