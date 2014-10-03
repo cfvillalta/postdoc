@@ -126,7 +126,7 @@ else:
     #print seqs_above_per
 
 
-new_seq_file = open("%s_%s_percentile.fa" %(fasta_in_split[0],var),'w')
+new_seq_file = open("%s_%s_percentile.fasta" %(fasta_in_split[0],var),'w')
 for seq in seqs_above_per:
     new_seq_file.write(">%s\n%s\n" %(seq, seqs_above_per[seq][0]))
 
@@ -137,7 +137,10 @@ import phylo_tools
 #input just the main name without the fa.
 phylo_tools.ClustalO("%s_%s_percentile" %(fasta_in_split[0],var))
 
-#phylo_tools.FastTreeMP("%s_%s_percentile" %(fasta_in_split[0],var))
+phylo_tools.FastTreeMP("%s_%s_percentile_clustalo" %(fasta_in_split[0],var))
+
+phylo_tools.fasta2cdt("%s_%s_percentile_clustalo" %(fasta_in_split[0],var))
+
 
 
 
