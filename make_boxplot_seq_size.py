@@ -133,7 +133,7 @@ for seq in seqs_above_per:
 new_seq_file.close()
     
 import phylo_tools
-
+import cdt_tools
 #input just the main name without the fa.
 phylo_tools.ClustalO("%s_%s_percentile" %(fasta_in_split[0],var))
 
@@ -141,6 +141,6 @@ phylo_tools.FastTreeMP("%s_%s_percentile_clustalo" %(fasta_in_split[0],var))
 
 phylo_tools.fasta2cdt("%s_%s_percentile_clustalo" %(fasta_in_split[0],var))
 
-
+cdt_tools.add_taxid("%s_%s_percentile_clustalo.cdt" %(fasta_in_split[0],var))
 
 
