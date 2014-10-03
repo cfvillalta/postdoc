@@ -116,12 +116,13 @@ seqs_above_per = {}
 if (int(var) > 0) and (int(var) <= 100):
     print "number within range, will extract sequences above the %s percentile." %(var)
     for seq in seqs_dict:
-        if int(seqs_dict[seq][1]) >= int(var):
+        if int(seqs_dict[seq][1]) >= np.percentile(array,int(var)):
             seqs_above_per[seq] = seqs_dict[seq]
 else:
 
     print "number not within range"
 
+#print seqs_dict
     #print seqs_above_per
 
 
@@ -131,3 +132,12 @@ for seq in seqs_above_per:
 
 new_seq_file.close()
     
+import phylo_tools
+
+#input just the main name without the fa.
+phylo_tools.ClustalO("%s_%s_percentile" %(fasta_in_split[0],var))
+
+#phylo_tools.FastTreeMP("%s_%s_percentile" %(fasta_in_split[0],var))
+
+
+
