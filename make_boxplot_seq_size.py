@@ -6,7 +6,9 @@ import sys
 import re
 
 fasta_in = sys.argv[1]
+print fasta_in
 fasta_in_split = fasta_in.split(".")
+print fasta_in_split
 fasta = open(fasta_in, 'rU')
 seqs = fasta.readlines()
 
@@ -133,8 +135,10 @@ for seq in seqs_above_per:
 new_seq_file.close()
     
 import phylo_tools
+print dir(phylo_tools)
 import cdt_tools
 #input just the main name without the fa.
+print "%s_%s_percentile" %(fasta_in_split[0],var)
 phylo_tools.ClustalO("%s_%s_percentile" %(fasta_in_split[0],var))
 
 phylo_tools.FastTreeMP("%s_%s_percentile_clustalo" %(fasta_in_split[0],var))
