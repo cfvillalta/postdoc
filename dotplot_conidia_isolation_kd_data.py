@@ -30,7 +30,19 @@ for line in csv:
          lines = line.split(",")
          header = lines
 
-print data
+#print data
+
+#going to organize data by tyr.
+
+tyrs = {}
+for sample in data:
+    if data[sample][2] in tyrs:
+        #if tyrs[data[sample][2]][data[sample][3]] in tyrs:
+        tyrs[data[sample][2]][data[sample][3]].append(data[sample])
+    else:
+        tyrs[data[sample][2]][data[sample][3]]= [data[sample]]
+#organized now by tyrs but still need to organize by light and dark.        
+print tyrs
 #going to make a dotplot                                                                                             
 '''
 import numpy as np
