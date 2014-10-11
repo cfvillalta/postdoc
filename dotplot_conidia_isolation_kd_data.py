@@ -54,7 +54,7 @@ for sample in data:
 
 #print tyrs
 #going to make a dotplot                                                                                             
-'''
+
 import numpy as np
 import matplotlib as mpl
 import pylab
@@ -70,8 +70,8 @@ tyrs = {}
 microconidia = {}
 macrocondia = {}
 
-for tyr in data:
-    tyr_light = "%s_light" %(data[tyr][2])
+for tyr in tyrs:
+    tyr_light = "%s_light" %(tyrs[tyr][2])
     tyr_dark = "%s_dark" %(data[tyr][2])
     tyrs[tyr_light]= ""
     tyrs[tyr_dark]= ""
@@ -80,7 +80,7 @@ for tyr in data:
 
     #print tyrs                                                                                                    
     #print data                                                                                                    
-
+'''
 #lengths grouped by tyrosinases                                                                                    
 for tyr in tyrs:
     for sample in data:
@@ -92,7 +92,7 @@ for tyr in tyrs:
             #print sample                                                                                          
         elif tyr == "%s_dark" %(data[sample][2]):
             growth_by_tyr[tyr].append(float(data[sample][5]))
-
+'''
 tyr_sorted = []
 tyr_growth_sorted = []
 tyr_bioreps = []
@@ -102,19 +102,19 @@ tyr_sorted.append("")
 
 import random
 num = 0
-for x in sorted(growth_by_tyr):
+for x in sorted(tyrs):
     num = num+1
     print num
     tyr_sorted.append(x)
-    tyr_growth_sorted.extend(growth_by_tyr[x])
-    bioreps = len(growth_by_tyr[x])
-    a=num-.15
-    b=num+.15
-    x_axis = [random.uniform(a,b) for p in range(0, bioreps)]
-    tyr_bioreps.extend(x_axis)
-print tyr_bioreps
-print tyr_sorted
-print tyr_growth_sorted
+   # tyr_growth_sorted.extend(growth_by_tyr[x])
+   # bioreps =len()
+   # a=num-.15
+   # b=num+.15
+   # x_axis = [random.uniform(a,b) for p in range(0, bioreps)]
+   # tyr_bioreps.extend(x_axis)
+#print tyr_bioreps
+#print tyr_sorted
+#print tyr_growth_sorted
 
 
 
@@ -141,4 +141,4 @@ plt.plot(tyr_bioreps, tyr_growth_sorted, 'ro')
 fig.savefig(boxplot_name)
 plt.show()
 #I want to count lengths of list in growth by tyr dict.        
-'''
+
