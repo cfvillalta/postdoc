@@ -36,23 +36,23 @@ for line in csv:
 
 tyrs = {}
 for sample in data:
-    print data[sample]
+
     if data[sample][2] in tyrs:
+
         if data[sample][3] in tyrs[data[sample][2]]:
+            print '%s if tyr present, and light or dark' %(data[sample])
             tyrs[data[sample][2]][data[sample][3]].append(data[sample])
         else:
-            tyrs[data[sample][2]]={}
+
+
             tyrs[data[sample][2]][data[sample][3]]=[data[sample]]
     else:
-#        if data[sample][3] in tyrs[data[sample][2]]:
-#           tyrs[data[sample][2]][data[sample][3]].append(data[sample])
-#        else:
+        print '%s if tyr not present yet' %(data[sample])
         
         tyrs[data[sample][2]]={}
         tyrs[data[sample][2]][data[sample][3]]=[data[sample]]
-           # tyrs[data[sample][2]][data[sample][3]]=[data[sample]]
-#organized now by tyrs but still need to organize by light and dark.        
-print tyrs
+
+#print tyrs
 #going to make a dotplot                                                                                             
 '''
 import numpy as np
