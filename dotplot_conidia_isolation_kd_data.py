@@ -36,11 +36,21 @@ for line in csv:
 
 tyrs = {}
 for sample in data:
+    print data[sample]
     if data[sample][2] in tyrs:
-        #if tyrs[data[sample][2]][data[sample][3]] in tyrs:
-        tyrs[data[sample][2]][data[sample][3]].append(data[sample])
+        if data[sample][3] in tyrs[data[sample][2]]:
+            tyrs[data[sample][2]][data[sample][3]].append(data[sample])
+        else:
+            tyrs[data[sample][2]]={}
+            tyrs[data[sample][2]][data[sample][3]]=[data[sample]]
     else:
-        tyrs[data[sample][2]][data[sample][3]]= [data[sample]]
+#        if data[sample][3] in tyrs[data[sample][2]]:
+#           tyrs[data[sample][2]][data[sample][3]].append(data[sample])
+#        else:
+        
+        tyrs[data[sample][2]]={}
+        tyrs[data[sample][2]][data[sample][3]]=[data[sample]]
+           # tyrs[data[sample][2]][data[sample][3]]=[data[sample]]
 #organized now by tyrs but still need to organize by light and dark.        
 print tyrs
 #going to make a dotplot                                                                                             
