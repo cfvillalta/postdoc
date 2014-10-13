@@ -104,8 +104,15 @@ for name in sorted(data_to_plot.keys()):
                     add_list.append(sample[5])
     
     dotplot_data.append(add_list)
-
+import random
 print dotplot_data
+num_conds = len(dotplot_data)
+num_conds_list =  [random.uniform(a,b) for p in range(0, num_conds)]
+import numpy as np
+import matplotlib as mpl
+import pylab
 
+#mpl.use('agg')
 
-
+import matplotlib.pyplot as plt
+#plt.plot(
