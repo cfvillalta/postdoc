@@ -69,7 +69,8 @@ tyr_sorted = []
 tyr_growth_sorted = []
 tyr_bioreps = []
 tyr_sorted.append("")
-#print growth_by_tyr
+print 'growth_by_tyr'
+print growth_by_tyr
 
 import random
 num = 0
@@ -86,7 +87,7 @@ for x in sorted(growth_by_tyr):
 print tyr_bioreps
 print tyr_sorted
 print tyr_growth_sorted
-
+#print growth_by_tyr
 
 
 fig = plt.figure(1, figsize=(9, 6))
