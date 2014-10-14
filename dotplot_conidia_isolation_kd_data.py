@@ -65,7 +65,7 @@ condition_list = ['']
 for tyr in sorted(tyrs):
     print tyr
     for cond in tyrs[tyr]:
-        print cond
+ #       print cond
         condition_list.append('%s_%s_microcondiia' %(tyr,cond))
         condition_list.append('%s_%s_macrocondiia' %(tyr,cond))
   #      for sample in  tyrs[tyr][cond]:
@@ -121,8 +121,8 @@ for name in sorted(data_to_plot.keys()):
     
     dotplot_data.append(add_list)
 #all of the growth rate data /y axis ordered vector_light micro vector_ligth_marco then vector dark micro.....
-print dotplot_data
-print condition_list
+#print dotplot_data
+#print condition_list
 
 
 ####################
@@ -159,29 +159,36 @@ for tyr in sorted(tyrs):
             else:
                 genotype[tyr]=[str(np.log10(float(sample[4])))]
 
-num_genotypes  = num_samples/num_genotypes
-print 'genotype'
-print genotype
-print 'conditions'
-print conditions
+num_each_genotypes  = num_samples/num_genotypes
+#print 'genotype'
+#print genotype
+#print 'conditions'
+#print conditions
 num_conditions = len(conditions)
 genotype_list = []
-print num_samples
-print num_genotypes
+genotype_list2 = []
+#print num_samples
+#print num_genotypes
+#print num_each_genotypes
 
 for g in genotype:
-    print ','.join(genotype[g])
-    ro.r('%s = c(%s)' %(g,','.join(genotype[g])))
+ #   print ','.join(genotype[g])
+    ro.r('%s_list = c(%s)' %(g,','.join(genotype[g])))
   
-    genotype_list.append(g)
-    print ro.r('%s' %(g))
-ro.r('kd_genotype=c(%s)' %(','.join(genotype_list)))
-print ro.r('ls()')
-print genotype_list
+    genotype_list.append('"%s"'%(g))
+    genotype_list2.append('%s_list'%(g))
+    print ro.r('%s_list' %(g))
+ro.r('kd_genotype=c(%s)' %(','.join(genotype_list2)))
+#print ro.r('ls()')
+#print genotype_list
 
-ro.r('conditions =gl(%s,1,%s, labels=c(%s))' %(num_conditions,num_samples,",".join(conditions)))
-ro.r('geno = gl(%s,%s,%s, labels=c(%s))' %())
+ro.r('conditions =gl(%s,1,%s,labels=c(%s))' %(num_conditions,num_samples,",".join(conditions)))
+
+ro.r('geno=gl(%s,%s,%s,labels=c(%s))' %(num_genotypes,num_each_genotypes,num_samples,",".join(genotype_list)))
 print ro.r('conditions')
+print ro.r('geno')
+
+print ro.r('anova(lm(kd_genotype~conditions*geno))')
 
 ##############
 #organzing data for graphing
@@ -193,7 +200,7 @@ y_axis_points = []
 x_axis_points= []
 for x in dotplot_data:
     num = num+1
-    print num
+#    print num
     bioreps = len(x)
     a=num-.15
     b=num+.15
