@@ -141,13 +141,18 @@ import pandas.rpy.common as com
 genotype = {}
 num_genotypes = 0
 num_samples  = 0
+conditions = []
 for tyr in sorted(tyrs):
     #genotype loop
     num_genotypes = num_genotypes +1
     for cond in sorted(tyrs[tyr]):
         #light or dark loop
+        if cond in conditions:
+            pass
+        else:
+            conditions.append('"%s"' %(cond))
         for sample in tyrs[tyr][cond]:
-            print sample
+            #print sample
             num_samples = num_samples+1
             if tyr in genotype:
                 genotype[tyr].append(str(np.log10(float(sample[4]))))
@@ -155,15 +160,29 @@ for tyr in sorted(tyrs):
                 genotype[tyr]=[str(np.log10(float(sample[4])))]
 
 num_genotypes  = num_samples/num_genotypes
-
+print 'genotype'
 print genotype
+print 'conditions'
+print conditions
+num_conditions = len(conditions)
+genotype_list = []
 print num_samples
 print num_genotypes
 
 for g in genotype:
     print ','.join(genotype[g])
     ro.r('%s = c(%s)' %(g,','.join(genotype[g])))
+  
+    genotype_list.append(g)
     print ro.r('%s' %(g))
+ro.r('kd_genotype=c(%s)' %(','.join(genotype_list)))
+print ro.r('ls()')
+print genotype_list
+
+ro.r('conditions =gl(%s,1,%s, labels=c(%s))' %(num_conditions,num_samples,",".join(conditions)))
+ro.r('geno = gl(%s,%s,%s, labels=c(%s))' %())
+print ro.r('conditions')
+
 ##############
 #organzing data for graphing
 ##############
@@ -181,6 +200,8 @@ for x in dotplot_data:
     x_axis = [random.uniform(a,b) for p in range(0, bioreps)]
     x_axis_points.extend(x_axis)
     y_axis_points.extend(x)
+
+
 
 import wx
 import matplotlib as mpl
