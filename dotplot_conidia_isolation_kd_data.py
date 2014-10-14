@@ -63,11 +63,11 @@ for tyr in tyrs:
 #print tyrs
 condition_list = ['']
 for tyr in sorted(tyrs):
-#    print tyr
+    print tyr
     for cond in tyrs[tyr]:
-#        print cond
-         condition_list.append('%s_%s_microcondiia' %(tyr,cond))
-         condition_list.append('%s_%s_macrocondiia' %(tyr,cond))
+        print cond
+        condition_list.append('%s_%s_microcondiia' %(tyr,cond))
+        condition_list.append('%s_%s_macrocondiia' %(tyr,cond))
   #      for sample in  tyrs[tyr][cond]:
    #         print tyr
     #        print cond
@@ -94,8 +94,11 @@ for name in sorted(data_to_plot.keys()):
                 
                 if match and match_2:
                     #microconidia
-                    add_list.append(np.log10(float(sample[4])))
-                    
+                    log10_sample = np.log10(float(sample[4]))
+                    if float(sample[4]) == 0:
+                        add_list.append(0)
+                    else:
+                        add_list.append(log10_sample)
     dotplot_data.append(add_list)
     add_list=[]                    
 
@@ -108,8 +111,12 @@ for name in sorted(data_to_plot.keys()):
                 match_2 = cond_match.search(cond)
 
                 if match and match_2:
-                    #macroconidia                                                
-                    add_list.append(np.log10(float(sample[5])))
+                    log10_sample =  np.log10(float(sample[5]))
+                    if float(sample[5])==0:
+                    #macroconidia      
+                        add_list.append(0)
+                    else:
+                        add_list.append(log10_sample)
                     
     
     dotplot_data.append(add_list)
@@ -118,7 +125,45 @@ print dotplot_data
 print condition_list
 
 
+####################
+#2 way annova
+#looking at 2 conditions wheter light and dark make a difference or if genotype makes a difference.
+####################
+from numpy import *
+import scipy as sp
+from pandas import *
+from rpy2.robjects.packages import importr
+import rpy2.robjects as ro
+import pandas.rpy.common as com
+#genotype vector or tyr4
+#ld  is light or dark
+#only for microconidia
+genotype = {}
+num_genotypes = 0
+num_samples  = 0
+for tyr in sorted(tyrs):
+    #genotype loop
+    num_genotypes = num_genotypes +1
+    for cond in sorted(tyrs[tyr]):
+        #light or dark loop
+        for sample in tyrs[tyr][cond]:
+            print sample
+            num_samples = num_samples+1
+            if tyr in genotype:
+                genotype[tyr].append(str(np.log10(float(sample[4]))))
+            else:
+                genotype[tyr]=[str(np.log10(float(sample[4])))]
 
+num_genotypes  = num_samples/num_genotypes
+
+print genotype
+print num_samples
+print num_genotypes
+
+for g in genotype:
+    print ','.join(genotype[g])
+    ro.r('%s = c(%s)' %(g,','.join(genotype[g])))
+    print ro.r('%s' %(g))
 ##############
 #organzing data for graphing
 ##############
@@ -137,7 +182,7 @@ for x in dotplot_data:
     x_axis_points.extend(x_axis)
     y_axis_points.extend(x)
 
-
+import wx
 import matplotlib as mpl
 mpl.use('WXAgg')
 import pylab
@@ -150,4 +195,4 @@ ax.set_xticklabels(condition_list, rotation =90)
 plt.axis(ymin=0,ymax=10,xmin=0,xmax=num+1)
 plt.plot(x_axis_points, y_axis_points, 'ro')
 fig.tight_layout()
-plt.show()
+#plt.show()
