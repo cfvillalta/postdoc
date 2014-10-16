@@ -66,8 +66,8 @@ for tyr in sorted(tyrs):
     print tyr
     for cond in tyrs[tyr]:
  #       print cond
-        condition_list.append('%s_%s_microcondiia' %(tyr,cond))
-        condition_list.append('%s_%s_macrocondiia' %(tyr,cond))
+        condition_list.append('%s_%s_microconidia' %(tyr,cond))
+        condition_list.append('%s_%s_macroconidia' %(tyr,cond))
   #      for sample in  tyrs[tyr][cond]:
    #         print tyr
     #        print cond
@@ -177,7 +177,7 @@ for g in genotype:
   
     genotype_list.append('"%s"'%(g))
     genotype_list2.append('%s_list'%(g))
-    print ro.r('%s_list' %(g))
+ #   print ro.r('%s_list' %(g))
 ro.r('kd_genotype=c(%s)' %(','.join(genotype_list2)))
 #print ro.r('ls()')
 #print genotype_list
@@ -185,10 +185,72 @@ ro.r('kd_genotype=c(%s)' %(','.join(genotype_list2)))
 ro.r('conditions =gl(%s,1,%s,labels=c(%s))' %(num_conditions,num_samples,",".join(conditions)))
 
 ro.r('geno=gl(%s,%s,%s,labels=c(%s))' %(num_genotypes,num_each_genotypes,num_samples,",".join(genotype_list)))
-print ro.r('conditions')
-print ro.r('geno')
+#print ro.r('conditions')
+#print ro.r('geno')
 
 print ro.r('anova(lm(kd_genotype~conditions*geno))')
+
+#now need to work on t-test or signle test stat to see if its sign. Multiple hypothesis testing too.
+#can do mannwhitney test using scipy
+
+#print condition_list
+from scipy.stats import mannwhitneyu
+cond_pairs = []
+cond_pairs_mwt ={}
+for cond_a in condition_list:
+    for cond_b in condition_list:
+        if cond_a is cond_b:
+            pass
+        elif cond_a is '' or cond_b is '':
+            pass
+        else:
+            cond_list = [cond_a, cond_b]
+            cond_list = sorted(cond_list)
+            if cond_list in cond_pairs:
+                pass
+            else:
+                cond_pairs.append(cond_list)
+                cond_a_split = cond_a.split("_")
+                cond_b_split = cond_b.split("_")
+            
+#print cond_pairs
+#            print "%s and %s" %(cond_a_split[2],cond_b_split[2])
+                if cond_a_split[2] ==  cond_b_split[2]:
+                    if cond_a_split[2] == 'microconidia':
+                        bioreps_a = []
+                        bioreps_b = []
+                        for x in tyrs[cond_a_split[0]][cond_a_split[1]]:
+                            bioreps_a.append(float(x[4]))
+                        for x in tyrs[cond_b_split[0]][cond_b_split[1]]:
+                            bioreps_b.append(float(x[4]))
+                        mw_test =  mannwhitneyu(bioreps_a,bioreps_b)
+                        cond_pairs_mwt["%s" %("\t".join(cond_list))] = mw_test
+                       # print cond_a
+                       # print bioreps_a
+                       # print cond_b
+                       # print bioreps_b
+                       # print mw_test
+                       # print                                   
+                
+ #               print "%s and %s" %(cond_a_split[2],cond_b_split[2])
+#print tyrs
+#print condition_list
+pval_sort = []
+for x in sorted(cond_pairs_mwt):
+    pval_sort.append(str(cond_pairs_mwt[x][1]))
+#    print cond_pairs_mwt[x][1]
+
+ro.r('pval = c(%s)' %(",".join(pval_sort)))
+print ro.r('pval')
+print ro.r('length(pval)')
+padjust = ro.r('p.adjust(pval, method="BH",n=length(pval))')
+print padjust
+n=0
+for x in sorted(cond_pairs_mwt):
+    print x
+    print "%s\t%s" %(cond_pairs_mwt[x],padjust[n])
+    print
+    n=n+1
 
 ##############
 #organzing data for graphing
