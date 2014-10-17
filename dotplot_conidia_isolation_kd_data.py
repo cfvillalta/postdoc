@@ -241,14 +241,16 @@ for x in sorted(cond_pairs_mwt):
 #    print cond_pairs_mwt[x][1]
 
 ro.r('pval = c(%s)' %(",".join(pval_sort)))
-print ro.r('pval')
-print ro.r('length(pval)')
+#print ro.r('pval')
+#print ro.r('length(pval)')
 padjust = ro.r('p.adjust(pval, method="BH",n=length(pval))')
-print padjust
+#print padjust
 n=0
+
+#header
+print "Conditions\tp_value\tadjusted_p_value"
 for x in sorted(cond_pairs_mwt):
-    print x
-    print "%s\t%s" %(cond_pairs_mwt[x],padjust[n])
+    print "%s\t%s\t%s" %(x,cond_pairs_mwt[x][1],padjust[n])
     print
     n=n+1
 
@@ -285,4 +287,4 @@ ax.set_xticklabels(condition_list, rotation =90)
 plt.axis(ymin=0,ymax=10,xmin=0,xmax=num+1)
 plt.plot(x_axis_points, y_axis_points, 'ro')
 fig.tight_layout()
-#plt.show()
+plt.show()
