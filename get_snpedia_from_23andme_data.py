@@ -9,7 +9,7 @@ snp_in = open(genome_file,'r')
 snp_data = snp_in.readlines()
 
 snp_dict = {}
-
+total_snp = 0
 for snp in snp_data:
     if snp.startswith('rsid'):
         header=snp.strip()
@@ -17,9 +17,11 @@ for snp in snp_data:
         snp=snp.strip()
         snp_s = snp.split('\t')
         snp_dict[snp_s[0]]=snp_s
+        total_snp = total_snp+1
         
-#print snp_dict
-        
+print snp_dict
+print total_snp
+'''        
 keyword =re.compile('pathogenic',re.IGNORECASE) 
 
 
@@ -54,4 +56,4 @@ for snp in snps_no_snpedia:
 #print snps_no_snpedia
 snp_no_data.close()
         
-
+'''
