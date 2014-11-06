@@ -10,15 +10,21 @@ snp_data = snp_in.readlines()
 
 snp_dict = {}
 total_snp = 0
+counter = 0
+group_num = 0
 for snp in snp_data:
     if snp.startswith('rsid'):
         header=snp.strip()
     elif snp.startswith('rs'):
         snp=snp.strip()
         snp_s = snp.split('\t')
-        snp_dict[snp_s[0]]=snp_s
+        snp_dict[group_num][snp_s[0]]=snp_s
         total_snp = total_snp+1
-        
+        if counter <1000:
+            counter = counter +1
+        else:
+            counter = 0
+            group_num = group_num+1
 print snp_dict
 print total_snp
 '''        
