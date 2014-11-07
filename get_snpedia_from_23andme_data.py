@@ -9,6 +9,7 @@ snp_in = open(genome_file,'r')
 snp_data = snp_in.readlines()
 
 snp_dict = {}
+snp_groups = {}
 total_snp = 0
 counter = 0
 group_num = 0
@@ -18,15 +19,24 @@ for snp in snp_data:
     elif snp.startswith('rs'):
         snp=snp.strip()
         snp_s = snp.split('\t')
-        snp_dict[group_num][snp_s[0]]=snp_s
+        if group_num in snp_groups:
+            snp_groups[group_num].append(snp_s[0])
+        
+        else:
+            snp_groups[group_num]=[snp_s[0]]
+        snp_dict[snp_s[0]]= snp_s
         total_snp = total_snp+1
         if counter <1000:
             counter = counter +1
         else:
             counter = 0
             group_num = group_num+1
-print snp_dict
-print total_snp
+#print snp_dict
+#print total_snp
+#print snp_groups
+for x in snp_groups:
+    print x
+
 '''        
 keyword =re.compile('pathogenic',re.IGNORECASE) 
 
