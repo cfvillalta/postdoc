@@ -47,10 +47,12 @@ make_dir = Popen(['mkdir', '%s/snp_groups' %(input_dir)])
 
 print input_dir
 
+list_file_paths = []
+
 for group in snp_groups:
     rel_path = "snp_groups/snp_group_%s.txt" %(group)
     abs_file_path = os.path.join(input_dir, rel_path)
-    print abs_file_path
+    list_file_paths.append(abs_file_path)
     snp_group_file = open(abs_file_path, 'w')
     snp_group_file.write("\n".join(snp_groups[group]))
 
