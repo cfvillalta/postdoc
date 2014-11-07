@@ -34,8 +34,27 @@ for snp in snp_data:
 #print snp_dict
 #print total_snp
 #print snp_groups
-for x in snp_groups:
-    print x
+#for x in snp_groups:
+ #   print x
+
+#will split up groups of 1000 into files.With the name snp_group_"num" eg. snp_group_0
+from subprocess import Popen, PIPE
+import os
+
+input_dir = os.path.dirname(genome_file)
+
+make_dir = Popen(['mkdir', '%s/snp_groups' %(input_dir)])
+
+print input_dir
+
+for group in snp_groups:
+    rel_path = "snp_groups/snp_group_%s.txt" %(group)
+    abs_file_path = os.path.join(input_dir, rel_path)
+    print abs_file_path
+    snp_group_file = open(abs_file_path, 'w')
+    snp_group_file.write("\n".join(snp_groups[group]))
+
+
 
 '''        
 keyword =re.compile('pathogenic',re.IGNORECASE) 
@@ -43,27 +62,29 @@ keyword =re.compile('pathogenic',re.IGNORECASE)
 
 snps_no_snpedia = []
 snp_dict_text = open('snp_data_out.dict', 'w')
-for snp in snp_dict:
+for group in snp_groups:
+    for snp in snp_groups[group]:
+        
 
-    site = wiki.Wiki("http://bots.snpedia.com/api.php")
+        site = wiki.Wiki("http://bots.snpedia.com/api.php")
 #print snp
 #print site
     
-    pagehandle = page.Page(site,snp)
-    try:
-        snp_page = pagehandle.getWikiText()
-        if keyword.search(snp_page):
-            snp_dict_text.write('SNP=%s\n'%(snp))
-            snp_dict_text.write('SNPEDIA_DATA=\n%s' %snp_page)
-            print 'SNPedia data available for %s\tputatively pathogenic' %(snp)
-        else:
-            print 'SNPedia data available for %s\t no pathogenic data' %(snp)
-    except:
-        snps_no_snpedia.append(snp)
-        print 'no SNPedia data present for %s' %(snp)
-        
-snp_dict_text.close()
-print 'all done'
+        pagehandle = page.Page(site,snp)
+        try:
+            snp_page = pagehandle.getWikiText()
+            if keyword.search(snp_page):
+                snp_dict_text.write('SNP=%s\n'%(snp))
+                snp_dict_text.write('SNPEDIA_DATA=\n%s' %snp_page)
+                print 'SNPedia data available for %s\tputatively pathogenic' %(snp)
+            else:
+                print 'SNPedia data available for %s\t no pathogenic data' %(snp)
+        except:
+            snps_no_snpedia.append(snp)
+            print 'no SNPedia data present for %s' %(snp)
+            
+            snp_dict_text.close()
+    print 'all done'
 
 snp_no_data = open('list_snps_no_snpedia_data.list','w')
 for snp in snps_no_snpedia:
