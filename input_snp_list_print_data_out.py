@@ -8,12 +8,11 @@ snp_file = sys.argv[1]
 snp_file_s = snp_file.split(".")
 snp_in = open(snp_file, 'r')
 snp_data = snp_in.readlines()
-
+snp_dict_text = open('%s_data_out.txt' %(snp_file_s[0]), 'w')
 keyword =re.compile('pathogenic',re.IGNORECASE) 
 for snp in snp_data:
     snp = snp.strip()
     #print snp
-    snp_dict_text = open('%s_data_out.txt' %(snp_file_s[0]), 'w')
     site = wiki.Wiki("http://bots.snpedia.com/api.php")
     pagehandle = page.Page(site,snp)
     try:
@@ -29,7 +28,7 @@ for snp in snp_data:
         pass
         #print 'no SNPedia data present for %s' %(snp)
         
-        snp_dict_text.close()
+snp_dict_text.close()
 
 status_file = open(done_extracting_snpedia_data.txt, 'w')
 status_file.write('%s_data_out.txt' %(snp_file_s[0]))
