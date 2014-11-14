@@ -30,7 +30,7 @@ for snp in snp_data:
         
 snp_dict_text.close()
 
-status_file = open(done_extracting_snpedia_data.txt, 'w')
+status_file = open('done_extracting_snpedia_data.txt', 'w')
 status_file.write('%s_data_out.txt' %(snp_file_s[0]))
 status_file.close()
 
