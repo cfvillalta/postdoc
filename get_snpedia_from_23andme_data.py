@@ -44,18 +44,35 @@ import os
 input_dir = os.path.dirname(genome_file)
 
 make_dir = Popen(['mkdir', '%s/snp_groups' %(input_dir)])
-
+make_dir.communicate()
 print input_dir
 
 list_file_paths = []
 
+counter = 0
 for group in snp_groups:
     rel_path = "snp_groups/snp_group_%s.txt" %(group)
     abs_file_path = os.path.join(input_dir, rel_path)
     list_file_paths.append(abs_file_path)
     snp_group_file = open(abs_file_path, 'w')
     snp_group_file.write("\n".join(snp_groups[group]))
+    snp_group_file.close()
+    counter = counter+1
+    if counter > 25:
+        print abs_file_path
+        run_snp_script = Popen(['python', 'input_snp_list_print_data_out.py', '%s' %(abs_file_path)])
+        run_snp_script.communicate()
+        counter = 0
+        
+        
+    else:
+  #      counter = counter+1
+  #      print counter
+        print abs_file_path
+        run_snp_script = Popen(['python', 'input_snp_list_print_data_out.py', '%s' %(abs_file_path)]) 
+        
 
+#run_snp_script = Popen(['python', 'input_snp_list_print_data_out.py', '/Users/cfvillalta/Downloads/snp_groups/snp_group_0.txt'])
 
 
 '''        
