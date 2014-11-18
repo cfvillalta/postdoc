@@ -20,13 +20,13 @@ for snp in snp_data:
         if keyword.search(snp_page):
             snp_dict_text.write('SNP=%s\n'%(snp))
             snp_dict_text.write('SNPEDIA_DATA=\n%s' %snp_page)
-            print 'SNPedia data available for %s\tputatively pathogenic' %(snp)
+            print 'SNPedia data available for %s\tputatively pathogenic %s' %(snp,snp_file)
         else:
-#            print 'SNPedia data available for %s\t no pathogenic data' %(snp)
-            pass
+            print 'SNPedia data available for %s\t no pathogenic data %s' %(snp,snp_file)
+#            pass
     except:
         pass
-        #print 'no SNPedia data present for %s' %(snp)
+        print 'no SNPedia data present for %s %s' %(snp, snp_file)
         
 snp_dict_text.close()
 
