@@ -22,7 +22,7 @@ for GID in GIDs:
 #    print GID_s[0]
 #add GID to GID_list
     GID_list.append(GID_s[0])
-#input GID list into my phylo tools module that that takes in a list of GIDs and outputs a dictionary with GID as the key and sequence as the values.
+#input GID list into my phylo tools module that that takes in a list of GIDs and outputs a dictionary with GID as the key and sequence as the values. Gets seq using nr database search with blastdbcmd from the blast package.
 fasta_seqs = phylo_tools.GID2seq(GID_list)
 
 #print fasta_seqs
