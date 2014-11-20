@@ -1,79 +1,97 @@
 #!/usr/bin/python
-
+#import packages and modules I will be using in the script
 import sys
 from Bio import Phylo
 from subprocess import Popen, PIPE
 import os
 import re
-
 ###################################################################
 #input fasta file and get rid of duplicates and print out new fasta
 ###################################################################
+#get filepath of aligned fasta file
 aligned_fasta_file = sys.argv[1]
+#split file path name from extension
 aligned_fasta_file_split = aligned_fasta_file.split(".")
-
+#open alignment file
 fasta = open(aligned_fasta_file, 'rU')
-
+#read lines into list called seqs
 seqs = fasta.readlines()
-
+#make an empty dictionary called seqs_dict
 seqs_dict = {}
+#make an empty string called id
 id = ''
+#loop through each line of seqs
 for line in seqs:
-
+    #if line starts with '>' its the fasta header
     if line.startswith('>'):
+        #strip white space from id
         id = line.strip()
+        #i did this step to get rid of seqs with the same GID since a dictionary will overwrite the same key.
+        #use id as key in seqs_dict with empty list as value
         seqs_dict[id]=[]
+    #else if not fasta header run code below.
     else:
-        #   print id
-        #print line
+        #if not fasta header its sequence infor and line is striped of whitespace and appended to list that is value in seqs dict.
         seqs_dict[id].append(line.strip())
-
+#open a new fasta file with the same name as the aligned file but with a .fasta extension
 fasta_out = open("%s.fasta" %(aligned_fasta_file_split[0]), 'w')
+#loop through seqs_dict
 for seq in seqs_dict:
+    #write seq key to fasta file, it will be the fasta seq header.
     fasta_out.write('%s\n' %(seq))
+    #join seqs in list for the value in the dictionary corresponding to the key above and print out the sequence below the corresponding fasta header.
     fasta_out.write('%s\n' %('\n'.join(seqs_dict[seq])))
+#close fasta file.
 fasta_out.close()
 
 ###################################################################
 #Input fasta file and run fasttree, out put is newick tree
 ###################################################################
-
+#tells using FastTreeMP MP= multiprocessor is going to start.
 print 'Starting FastTreeMP'
+#subprocess to run FastTreeMP within python. FastTreeMP will run the fasta created above and will PIPE the output which is a newick tree to stdout
 FastTreeMP = Popen(['FastTreeMP', '-quiet', '-nopr', '-log', '%s.log' %(aligned_fasta_file_split[0]), '%s.fasta' %(aligned_fasta_file_split[0])],stdout=PIPE)
+#open a new newick file that I will write newick formatted data into, will have the same file name as the input file but with a .newick extension.
 newick_out = open("%s.newick" %(aligned_fasta_file_split[0]), 'w')
+#write the output from the FastTreeMP subprocess into the new newick file.
 newick_out.write(FastTreeMP.stdout.read())
-
+#command that tells the script to wait until the subprocess is done before it can continue.
 FastTreeMP.communicate()
+#close the newick file because all writing is done.
 newick_out.close()
+#tells user fasttreeMP is done.
 print 'Done with FastTreeMP'
 ###################################################################
-
-#print '%s_no_dup.newick' %(aligned_fasta_file_split[0])
-
+#use the phylo module from the biopython package to read in tree data from the newick file created above.
 tree = Phylo.read('%s.newick' %(aligned_fasta_file_split[0]), 'newick')
-
-#print tree
-
+#extract all the IDs for all terminal portions of the tree, so basically the IDs of sequences used to build the tree.
 leafs= tree.get_terminals()
-
+#make an empty dictionary I will put GIDs into as the key and taxonomic information for the id into as the value.
 uniq_GID_name_dict = {}
+#telling the user I am going to begin using blastdbcmd to search for taxonomic info of each GID present in the tree.
 print "Starting blastdbcmd searches"
+#made a counter set to zero (integer variable)
 x=0
+#loop through list leafs
 for leaf in leafs:
+    #extract the gid from leaf variable
     GID = leaf.name
-    #print GID
+    #split the GID string in order to just get the id itself
     GID_split = GID.split("/")
-    #print uniq_GID_name_dict
+    #run subprocess p. The subprocess is just running blastdbcmd, where the GID is input and the output is taxonomic information (genus and species name for the sequence, information is piped to stdout)
     p = Popen(['blastdbcmd', '-db', 'nr', '-dbtype', 'prot', '-entry', GID_split[0], '-target_only','-outfmt', '%t'],stdout = PIPE)
+    #read the stdout, which has the taxonomic information.
     stdout = p.stdout.read()
+    #wait for script to finish before proceeding.
     p.communicate()
+    #if there is a std out run code below
     if stdout:
+        #add one to counter
         x = x+1
-        # print x
+        #make a new id which is the GID joined to the stdout with a underscore. 
         new_ID ='_'.join([GID_split[0],stdout])
+        #STOPPED HERE
         uniq_GID_name_dict[x] = [GID_split[0],new_ID]
-        # print new_ID
-        
     else:
         x = x+1
         #        print x    
