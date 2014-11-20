@@ -56,19 +56,25 @@ counter_2 = 0
 for snp in snp_23andme:
     #for every new snp counter increased by 1 
     counter_2=counter_2+1
-    #use wikitools to STOPPED HERE
+    #use wikitools to access snpedia bot site. Action is called site
     site = wiki.Wiki("http://bots.snpedia.com/api.php")
-#print snp
-#print site
-    
+    #in pangehandle I call up the site and see if the sno is present in there.
     pagehandle = page.Page(site,snp)
+    #try the commands below if doesnt work move to except
     try:
+        #try to grab page info only works if snp is present.
         snp_page = pagehandle.getWikiText()
- 
+        #write SNP id to snp_data_out.dict
         snp_dict_text.write('SNP=%s\n'%(snp))
+        #write webpage data to snp_data_out.dict and when it begins and ends.
         snp_dict_text.write('SNPEDIA_DATA_BEGIN\n%s\nSNPEDIA_DATA_END' %snp_page)
+    #if try does not work move to except
     except:
+        #tells me snp not found
         print 'SNP not found.'
+        #move along
         pass
+    #print out what snp I am on out of how many snps using the two counters. Counter2 is slowly increasing and counter already has the full number of snps.
     print '%s out of %s\t%s' %(counter_2,counter,snp)
+#close the snp_data_out.dict file.
 snp_dict_text.close()    
