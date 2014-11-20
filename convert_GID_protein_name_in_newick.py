@@ -90,17 +90,17 @@ for leaf in leafs:
         x = x+1
         #make a new id which is the GID joined to the stdout with a underscore. 
         new_ID ='_'.join([GID_split[0],stdout])
-        #STOPPED HERE
+        #use the number from the x counter as the key and have a list as a value. The list contains the GID and the new id.
         uniq_GID_name_dict[x] = [GID_split[0],new_ID]
+    #if no stdout
     else:
+        #add one to the counter
         x = x+1
-        #        print x    
-        # print "%s\t%s" %(GID_split[0].strip(),stdout)
+        #use the number from the counter as the key and as the value input the GID twice.
         uniq_GID_name_dict[x]= [GID, '%s\n' %(GID)]
-        #print "%s\t%s" %(x,uniq_GID_name_dict[x])
-
+#open new file to output GID and taxid. I think I made a file just to have the data handy in a text file for later use. But I could do something different than this step.
 GID_tax = open('%s_GID_taxID.out' %(aligned_fasta_file_split[0]),'w')
-
+#STOPPED HERE
 for x in uniq_GID_name_dict:
     #print "%s\t%s" %(x,uniq_GID_name_dict[x])
     GID_tax.write('%s\t%s\t%s' %(x, uniq_GID_name_dict[x][0], uniq_GID_name_dict[x][1]))
