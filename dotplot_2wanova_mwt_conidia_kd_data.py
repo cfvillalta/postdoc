@@ -264,24 +264,27 @@ for cond_a in condition_list:
                         mw_test =  mannwhitneyu(bioreps_a,bioreps_b)
                         #in condition pairs mwt use the cond_list string with the type of conditions being compared as the key and the mw_test output as the value. 
                         cond_pairs_mwt["%s" %("\t".join(cond_list))] = mw_test
-#STOPPED HERE
+#make black list called pval_sort
 pval_sort = []
+#sort dictionary
 for x in sorted(cond_pairs_mwt):
+    #extract pvalues for each pair of conditions tested and appened into list.
     pval_sort.append(str(cond_pairs_mwt[x][1]))
-#    print cond_pairs_mwt[x][1]
-
+#in R add pval_sort list from python into a array called pval.
 ro.r('pval = c(%s)' %(",".join(pval_sort)))
-#print ro.r('pval')
-#print ro.r('length(pval)')
+#run padjust on array in R to get multiple hypothesis tested pvalues with benjamini-hotchberg.
 padjust = ro.r('p.adjust(pval, method="BH",n=length(pval))')
-#print padjust
+#a counter
 n=0
-
-#header
+#print header
 print "Conditions\tp_value\tadjusted_p_value"
+#loop through sorted cond_pairs_mwt dict
 for x in sorted(cond_pairs_mwt):
+    #print out condition pairs (key), data from the mwt, and adjusted pvalue
     print "%s\t%s\t%s" %(x,cond_pairs_mwt[x][1],padjust[n])
+    #print white space
     print
+    #add 1 to the counter.
     n=n+1
 
 ##############
@@ -289,32 +292,49 @@ for x in sorted(cond_pairs_mwt):
 ##############
 
 import random
+#new counter set to zero
 num = 0
+#list for y-axis data
 y_axis_points = []
+#list for x-axis data
 x_axis_points= []
+#loop through dotplot_data list of lists, has conidia numbers
 for x in dotplot_data:
+    #add 1 to counter
     num = num+1
-#    print num
+    #calculate the number of bioreps for each genotype/condition/sporetype combo
     bioreps = len(x)
+    #using counter to set up the min and max range so dots appear close together in dotplot.
     a=num-.15
     b=num+.15
+    #commute a random amount of non overlappint numbers withing the range a, b for the number of bioreps I have.
     x_axis = [random.uniform(a,b) for p in range(0, bioreps)]
+    #input the x_axis list of numbers as my x_axis points for dotplot.
     x_axis_points.extend(x_axis)
+    #y axis points are just the numbers present in each list x.
     y_axis_points.extend(x)
-
-
+############
+#plotting the graph
+############
 
 import wx
 import matplotlib as mpl
 mpl.use('WXAgg')
 import pylab
-
 import matplotlib.pyplot as plt
+#open up graphing figure.
 fig = plt.figure()
+#add plot into figure called ax
 ax = fig.add_subplot(111)
+#create axes on graph
 ax=plt.gca()
+#set labels for x asis using the list of conditions have them be upright
 ax.set_xticklabels(condition_list, rotation =90)
+#set the min and max of the x and y axis.
 plt.axis(ymin=0,ymax=10,xmin=0,xmax=num+1)
+#plot the points for the x and y axis
 plt.plot(x_axis_points, y_axis_points, 'ro')
+#layout formatting
 fig.tight_layout()
+#show graph. Then I can save it by hand if I like how it looks to a .png file.
 plt.show()
