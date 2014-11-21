@@ -1,11 +1,10 @@
 #!/usr/bin/python/
 
 #in this script I want to input a file with fasta sequesnce that I am interested in and then pull the full sequences from NCBI. 
-
-#After pulling sequences want to align them with muscle
-#Build a phylogenetic tree with fast tree.
+#After pulling sequences want to align them with clustalo, originally used muscle but clustalo works better in comparison.
+#Build a phylogenetic tree with FastTreeMP.
 #convert to javatree view file formats.
-
+#several sections of this script have since making this script become classes in my wikitools module
 import sys
 import re
 from Bio import Phylo
@@ -16,67 +15,74 @@ import os
 #input fasta file and get rid of some duplicates and output new 
 #muscle aligned fasta.
 ###################################################################
+#get file path of fasta file
 aligned_fasta_file = sys.argv[1]
+#split filepath from extension
 aligned_fasta_file_split = aligned_fasta_file.split(".")
-
-'''
+#open fasta file in python
 fasta = open(aligned_fasta_file, 'rU')
-
+#read lines into list.
 seqs = fasta.readlines()
-
+#make an empty dictionary
 seqs_dict = {}
+#make an empty string
 id = ''
+#print get full seqs to tell user what we are doing.
 print 'Get Full Seqs'
+#loop through the seqs list
 for line in seqs:
-
+    #if list starts with a fasta header >
     if line.startswith('>'):
+        #search for the pattern below of >number/
         gid = re.compile(r"(>)(\d+)(/)")
-#        print line
+        #search for match in line
         match = gid.search(line)
+        #if there is a match
         if match:
+            #grab the (\d+) portion from the search and call it id.
             id = match.group(2)
+            #run blastdbcmd subprocess to get taxonomic and full seq, instead of just domain seq, information and PIPE it out as stdout.
             p = Popen(['blastdbcmd', '-db', 'nr', '-dbtype', 'prot', '-entry', id, '-target_only','-outfmt', '%t\t%s'],stdout = PIPE)
+            #read stdout from subprocess into stdout string.
             stdout = p.stdout.read()
+            #wait until subprocess is done to move on
             p.communicate()
+            #if there is a stdout
             if stdout:
+                #split the stdout at tabs into a list stdout_split
                 stdout_split = stdout.split("\t")
+                #use the id as the key to dictionary called seqs_dict and the stdout_split list  as the value
                 seqs_dict[id]= stdout_split
+            #if there was no stdout pass and move onto next line
             else:
                 pass
+        #if there was no match pass onto next line
         else:
             pass
+    #if line does not start with > aka fasta header move onto next line.
     else:
         pass
 #made this because I might use taxID later but dont want the name to get cut in the muscle alignment or fastree.
-
-#print seqs_dict
-
+#open new fasta file to stick full fasta seqs into.
 fasta = open('%s_unaligned.fa' %(aligned_fasta_file_split[0]), 'w')
+#loop through seqs_dict
 for seq in seqs_dict:
+    #write GID and full sequence in fasta format into the new file above
     fasta.write('>%s\n%s' %(seq,seqs_dict[seq][1]))
-
+#close fasta file.
 fasta.close()
-          
-#run muscle
-print 'Done getting Full Seqs'
-#print 'Begin Muscle'
-#muscle = Popen(['time','muscle3.8.31_i86darwin64', '-in', '%s_unaligned.fa' %(aligned_fasta_file_split[0]), '-out', '%s_aligned.fa' %(aligned_fasta_file_split[0])])
-#muscle.communicate()
-#print 'Done with muscle'
-
-#no longer running muscle saw that clustalo is faster and more accurate. 
-
-#clustalo_multithread
-#clustalo = Popen(['time', 'clustalo', '-i', '%s_unaligned.fa' %(aligned_fasta_file_split[0]), '-o', '%s_aligned.fa' %(aligned_fasta_file_split[0]), '--force', '--threads=4']) 
-#clustalo
+#tell the user we are done getting full seqs from the nr database.          
+print 'Done getting Full Seqs' 
+#tell user we are beginning clustalo
 print 'begin clustalo'
+#STOP HERE
 clustalo = Popen(['time', 'clustalo', '-i', '%s_unaligned.fa' %(aligned_fasta_file_split[0]), '-o', '%s_aligned_clustalo.fa' %(aligned_fasta_file_split[0]), '--force'])
 clustalo.communicate()
 print clustalo
 #run fasttree
 print 'done with clustalo'
 print 'Begin FastTreeMP'
-'''
+
 FastTreeMP = Popen(['FastTreeMP', '-quiet', '-nopr', '-log', '%s.log' %(aligned_fasta_file_split[0]), '%s_aligned_clustalo.fa' %(aligned_fasta_file_split[0])],stdout=PIPE)
 newick_out = open("%s_clustalo.newick" %(aligned_fasta_file_split[0]), 'w')
 newick_out.write(FastTreeMP.stdout.read())
