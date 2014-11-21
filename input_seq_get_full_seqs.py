@@ -75,20 +75,25 @@ fasta.close()
 print 'Done getting Full Seqs' 
 #tell user we are beginning clustalo
 print 'begin clustalo'
-#STOP HERE
+#open subprocess to run clustalo in order to align the newly created fasta file with full sequences. An aligned seqeucne file is produced in clustal and its named with the same filepath as the original unaligned file but with the addition of _aligned_clustalo.fa
 clustalo = Popen(['time', 'clustalo', '-i', '%s_unaligned.fa' %(aligned_fasta_file_split[0]), '-o', '%s_aligned_clustalo.fa' %(aligned_fasta_file_split[0]), '--force'])
+#wait until subprocess is done before continuing
 clustalo.communicate()
-print clustalo
-#run fasttree
+#tells user clustalo is done running
 print 'done with clustalo'
+#tells user we are going to run FastTreeMP
 print 'Begin FastTreeMP'
-
+#run FastTreeMP as a subprocess in python. Build a tree using the aligned sequence file that was output from clustalo. 
 FastTreeMP = Popen(['FastTreeMP', '-quiet', '-nopr', '-log', '%s.log' %(aligned_fasta_file_split[0]), '%s_aligned_clustalo.fa' %(aligned_fasta_file_split[0])],stdout=PIPE)
-newick_out = open("%s_clustalo.newick" %(aligned_fasta_file_split[0]), 'w')
-newick_out.write(FastTreeMP.stdout.read())
-
+#open a new textfile where we will input newick tree file data.
+#wait until FastTreeMP is done
 FastTreeMP.communicate()
+newick_out = open("%s_clustalo.newick" %(aligned_fasta_file_split[0]), 'w')
+#write stdout that was piped out of the FastTreeMP subprocess into the newick file.
+newick_out.write(FastTreeMP.stdout.read())
+#close newick file.
 newick_out.close()
+#let user know we are done with FastTreeMP
 print 'Done with FastTreeMP'
 
 
