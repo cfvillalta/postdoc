@@ -1,115 +1,138 @@
 #!/usr/bin/env python
-
 #script will input csv file and then make dotplot of data. 
 #calculte the median and plot it a different color or shape...
 
 import sys
 import re
-
+#get file path to input file which should be a .csv file with conidia numbers. I am counting the number of conidia isolated from plates.
 conidia_data = sys.argv[1]
+#split file path before file extension type
 file_name_split = conidia_data.split(".")
-
+#open conidia data file.
 fh = open(conidia_data)
-
+#read lines of conidia data file into list csv.
 csv = fh.readlines()
-
+#make a blank dictionary called data
 data = {}
+#make a blank list called header.
 header = []
-
+#loop through csv list
 for line in csv:
+    #sample is a re pattern that looks for lines with a pCV id which will have the conidia data
     sample = re.compile(r"(pCV\d+\-\d)")
+    #search line for sample pattern and not if there is a match.
     match = sample.search(line)
+    #if there is a match
     if match:
+        #strip line of whitespace
         line = line.strip()
+        #split data in line by comma ,
         lines = line.split(",")
+        #move string from lines[0] into data_name thats the data id....pCV...
         data_name = lines[0]
+        #input data_name as a key in data dictionary and use the lines list as the value.
         data[data_name] = lines
-
+    #if no match its the header
     else:
-         line = line.strip()
-         lines = line.split(",")
-         header = lines
+        #remove whitespace on front and end.
+        line = line.strip()
+        #split lines by comma
+        lines = line.split(",")
+        #copy lines list to header.
+        header = lines
 
-#print data
 
 #going to organize data by tyr.
-
+#make empty dictionary called tyrs.
 tyrs = {}
+#loop through data dictionary
 for sample in data:
-
+    #if tyr type present in tyrs
     if data[sample][2] in tyrs:
-
+        #if light or dark present already
         if data[sample][3] in tyrs[data[sample][2]]:
-           # print '%s if tyr present, and light or dark' %(data[sample])
+            #add new data to list that is already present for type of tyr light or dark. 
             tyrs[data[sample][2]][data[sample][3]].append(data[sample])
         else:
-
-
+            #add new light or dark as key to dictionary value in  the tyrs dict and input data into list for dict within dict.
             tyrs[data[sample][2]][data[sample][3]]=[data[sample]]
+    #if tyr key not present yet in list 
     else:
-       # print '%s if tyr not present yet' %(data[sample])
-        
+       # create new dictiorary entry with tyr type as key. with an emptyy dictionary as a value (will include light or dark ask key and a list as the value that will inclue data from the sample in the loop).
         tyrs[data[sample][2]]={}
+        #add in light or dark as value to dictionary/key to subdictionary. Add sample data which is value from data dictionary as the value to the dict in the dict.
         tyrs[data[sample][2]][data[sample][3]]=[data[sample]]
-
-
 #tyrs e.g. vector_light, vector_dark,tyr_light, tyr_dark
+#create an empty dictionary called data_to_plot.
 data_to_plot = {}
+#counter to count the number of conditions.
 num_cond = 0
+#loop through tyrs dict
 for tyr in tyrs:
+    #loop through dictionary within tyrs dict
     for cond in tyrs[tyr]:
+        #add one to number of conditions
         num_cond = num_cond+1
+        #make a key that is the typpe of tyr and cond joined by an underscore as the key to new dictionary that will have data to plot. Value is empty list I will append to later
         data_to_plot["%s_%s" %(tyr, cond)]= []
-#print tyrs
+#make a list called conditions list with an empty string in it. Will appened more later, have an empty string in there for graph formatting purposes.
 condition_list = ['']
+#loop though dict of tyrs, but sorted
 for tyr in sorted(tyrs):
-    print tyr
+    #loop through subdictionary.
     for cond in tyrs[tyr]:
- #       print cond
+        #add to the list the type of microcondia conditions e.g. tyr1_light_microconidia
         condition_list.append('%s_%s_microconidia' %(tyr,cond))
+        #add to the list the type of macrocondia conditions e.g. tyr1_light_macroconidia
         condition_list.append('%s_%s_macroconidia' %(tyr,cond))
-  #      for sample in  tyrs[tyr][cond]:
-   #         print tyr
-    #        print cond
-     #       print sample
-                    
-#print sorted(data_to_plot.keys())
+
 import numpy as np
+#make blank list called dotplot data
 dotplot_data=[]
-#print data_to_plot
+#sort dict and then loop through it.
 for name in sorted(data_to_plot.keys()):
-#    print name
+    #split by underscore
     name_split = name.split("_")
-#    print name_split
+    #match criteria to match tyrs, using strings made from split above.
     tyr_match = re.compile(name_split[0])
+    #match criteria to match condition using strings made from split above.
     cond_match = re.compile(name_split[1])
+    #blank list called add_list
     add_list = []
-#    microconidia
+#MICROCONIDIA
+    #loop thorugh tyrs dict.
     for tyr in tyrs:
+        #loop through dict within dict.
         for cond in tyrs[tyr]:
- #           condition_list.append('%s_%s_microcondiia' %(tyr,cond))
+            #loop through list in dict of dictionary
             for sample in tyrs[tyr][cond]:
+                #see if tyr_match matches the tyr.
                 match = tyr_match.search(tyr)
+                #see if cond_match matches the cond
                 match_2 = cond_match.search(cond)
-                
+                #if match and match_2 have matches present from re.search
                 if match and match_2:
                     #microconidia
+                    #extract microconidia data from sample list. Convert to a floating point number and log10 transform it.
                     log10_sample = np.log10(float(sample[4]))
+                    #if the number is equal to zero, add a zero to the list.
                     if float(sample[4]) == 0:
                         add_list.append(0)
+                    #if the number is not zero add the log10_sample floating point number to add_list list.
                     else:
                         add_list.append(log10_sample)
+    #appenend list to list called dotplot_data. Now a list of lists.
     dotplot_data.append(add_list)
+    #overwrite add_list with an empty list.
     add_list=[]                    
 
-#macroconidia
+#MACROCONIDIA 
+#Do the same thing I did with the microconidia except I am grabbing data for macroconidia.
     for tyr in tyrs:
         for cond in tyrs[tyr]:
-#            condition_list.append('%s_%s_microcondiia' %(tyr,cond))
             for sample in tyrs[tyr][cond]:
                 match = tyr_match.search(tyr)
                 match_2 = cond_match.search(cond)
-
                 if match and match_2:
                     log10_sample =  np.log10(float(sample[5]))
                     if float(sample[5])==0:
@@ -117,13 +140,7 @@ for name in sorted(data_to_plot.keys()):
                         add_list.append(0)
                     else:
                         add_list.append(log10_sample)
-                    
-    
     dotplot_data.append(add_list)
-#all of the growth rate data /y axis ordered vector_light micro vector_ligth_marco then vector dark micro.....
-#print dotplot_data
-#print condition_list
-
 
 ####################
 #2 way annova
@@ -138,10 +155,15 @@ import pandas.rpy.common as com
 #genotype vector or tyr4
 #ld  is light or dark
 #only for microconidia
+#empty dictionary called genotype
 genotype = {}
+#counter at zero to count number of genotypes.
 num_genotypes = 0
+#counter to count number of samples
 num_samples  = 0
+#list to list the number of conditions.
 conditions = []
+#STOPPED HERE
 for tyr in sorted(tyrs):
     #genotype loop
     num_genotypes = num_genotypes +1
