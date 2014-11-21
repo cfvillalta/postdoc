@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 #script will input csv file and then make dotplot of data. 
-#calculte the median and plot it a different color or shape...
+#the script also runs a 2way anova on microconidia data for TYR4 and the vector control using R.
+#the script also runs a mann whitney test for every combination of data between TYR4 and vector control. Use scipy
 
 import sys
 import re
@@ -163,100 +164,107 @@ num_genotypes = 0
 num_samples  = 0
 #list to list the number of conditions.
 conditions = []
-#STOPPED HERE
+#loop through tyr again.
 for tyr in sorted(tyrs):
-    #genotype loop
+    #count number of genotypes
     num_genotypes = num_genotypes +1
+    #loop through conditions for each tyr (dict in dict)
     for cond in sorted(tyrs[tyr]):
         #light or dark loop
+        #if the condition is in our new list called coniditions pass
         if cond in conditions:
             pass
+        #if conidition is not
         else:
+            #add condition to the list conditions
             conditions.append('"%s"' %(cond))
+        #loop through each sample for the tyr and cond
         for sample in tyrs[tyr][cond]:
-            #print sample
+            # use counter to count the number of samples
             num_samples = num_samples+1
+            #if the tyr in the genotype dictionary add log fold transformed microconidia count data to list of other counts.
             if tyr in genotype:
                 genotype[tyr].append(str(np.log10(float(sample[4]))))
+            #if the tyr is not present add a new key to dictionary and the appropriate microconidia count data.
             else:
                 genotype[tyr]=[str(np.log10(float(sample[4])))]
-
+#wanted to calculate the number of samples for each genotype
 num_each_genotypes  = num_samples/num_genotypes
-#print 'genotype'
-#print genotype
-#print 'conditions'
-#print conditions
-num_conditions = len(conditions)
+#counting the number of coniditions present
+num_conditions = len(conditions) 
+#blank genotype list
 genotype_list = []
+#blank second genotype list
 genotype_list2 = []
-#print num_samples
-#print num_genotypes
-#print num_each_genotypes
-
+#loop through genotype dictionary
 for g in genotype:
- #   print ','.join(genotype[g])
+    #running r in python naming a list that I will input microconidia data into.
     ro.r('%s_list = c(%s)' %(g,','.join(genotype[g])))
-  
+    #making a list of genotypes in python
     genotype_list.append('"%s"'%(g))
+    #second list of genorypes with the _list joined to the genotype.
     genotype_list2.append('%s_list'%(g))
- #   print ro.r('%s_list' %(g))
+#make a array in python called knockdown genotypes that will contain the types of genotypes present. e.g. tyr4_list
 ro.r('kd_genotype=c(%s)' %(','.join(genotype_list2)))
-#print ro.r('ls()')
-#print genotype_list
-
+#make a general linear group matrix, with the number of conditions and the number of samples. label with the types of conditions.(light or dark)
 ro.r('conditions =gl(%s,1,%s,labels=c(%s))' %(num_conditions,num_samples,",".join(conditions)))
-
+#make another general linear group matrix with the number of genotypes, the number of each genortype and the number of total samples. populate with the types of genotype e.g. (vector and TYR4)
 ro.r('geno=gl(%s,%s,%s,labels=c(%s))' %(num_genotypes,num_each_genotypes,num_samples,",".join(genotype_list)))
-#print ro.r('conditions')
-#print ro.r('geno')
-
+#run the 2 way annova in R. Output will be printed to the screen.
 print ro.r('anova(lm(kd_genotype~conditions*geno))')
 
 #now need to work on t-test or signle test stat to see if its sign. Multiple hypothesis testing too.
 #can do mannwhitney test using scipy
-
-#print condition_list
 from scipy.stats import mannwhitneyu
+#make a blank list to place cond_pairs into
 cond_pairs = []
+#make a blank dictionaru to put condition pairs into for mann whitney test
 cond_pairs_mwt ={}
+#loop through condition list
 for cond_a in condition_list:
+    #loop through condition list again
     for cond_b in condition_list:
+        #if the two conditions are the same pass.
         if cond_a is cond_b:
             pass
+        #if one of the conditions is an empty string pass
         elif cond_a is '' or cond_b is '':
             pass
+        #else if non of the above, the conditions must be different. 
         else:
+            #place cond_a and cond_b into a list called cond_list
             cond_list = [cond_a, cond_b]
+            #sort cond_list
             cond_list = sorted(cond_list)
+            #if the list is present in the list of lists called cond_pairs pass.
             if cond_list in cond_pairs:
                 pass
+            #if its not 
             else:
+                #add cond_list to cond_pairs list (now a list of lists)
                 cond_pairs.append(cond_list)
+                #split condition into list at the underscore for cond_a and cond_b
                 cond_a_split = cond_a.split("_")
                 cond_b_split = cond_b.split("_")
-            
-#print cond_pairs
-#            print "%s and %s" %(cond_a_split[2],cond_b_split[2])
+                #if the two strings from the list above match
                 if cond_a_split[2] ==  cond_b_split[2]:
+                    #if they are the string microconidia
                     if cond_a_split[2] == 'microconidia':
+                        #create two empty lists for two sets of bioreps a and b
                         bioreps_a = []
                         bioreps_b = []
+                        #loop through microcondiia data for the specific genotype and condition above by going through the tyrs dict and the subdictiony within with conditions.
                         for x in tyrs[cond_a_split[0]][cond_a_split[1]]:
+                            #convert the string to floating point numbers
                             bioreps_a.append(float(x[4]))
+                        #do the same as above for condition b
                         for x in tyrs[cond_b_split[0]][cond_b_split[1]]:
                             bioreps_b.append(float(x[4]))
+                        #run mann whitney test using scipy
                         mw_test =  mannwhitneyu(bioreps_a,bioreps_b)
+                        #in condition pairs mwt use the cond_list string with the type of conditions being compared as the key and the mw_test output as the value. 
                         cond_pairs_mwt["%s" %("\t".join(cond_list))] = mw_test
-                       # print cond_a
-                       # print bioreps_a
-                       # print cond_b
-                       # print bioreps_b
-                       # print mw_test
-                       # print                                   
-                
- #               print "%s and %s" %(cond_a_split[2],cond_b_split[2])
-#print tyrs
-#print condition_list
+#STOPPED HERE
 pval_sort = []
 for x in sorted(cond_pairs_mwt):
     pval_sort.append(str(cond_pairs_mwt[x][1]))
