@@ -9,85 +9,84 @@ import re
 from Bio import Phylo
 from subprocess import Popen, PIPE
 import os
-
-#input fasta file
-
+#get filepath of file input into script
 fasta_file = sys.argv[1]
+#split file path at . to separate path from extension
 file_split = fasta_file.split(".")
-
+#open file 
 fasta = open(fasta_file,'rU')
-
+#readlines in to list
 seqs = fasta.readlines()
-
+#make an empty dictionary, the dict will eventually have the GID as the key and a list as the value the list will have the start and end of the domain or string of domains, and the number of domains present.
 seqs_dict = {}
-
+#loop through seqs
 for line in seqs:
-#    print line.strip()
+    #make a regular expression object to look for the pattern below from the input fasta file. A fasta header and its coordinates
     gid = re.compile(r"(>)(\d+)(/)(\d+)\-(\d+)")
+    #search for a match to the regex object above in the line.
     match = gid.search(line)
+    #if there is a match
     if match:
-#        print line
-#        print match.group(2)
+        #get GID from regex object
         gid = match.group(2)
-#        print match.group(4)
+        #get start of domain from regex object
         start = match.group(4)
-#        print match.group(5)
+        #get end of domain position from regex object
         end = match.group(5)
-        
+        #if gid in dict run code below, the code below is to account for multiple domains because I want to know where the first domain begins and last domain ends.
         if gid in seqs_dict:
-           if float(seqs_dict[gid][0]) < float(start):
-               if float(seqs_dict[gid][1])> float(end):
-#                   print "%s\t%s\t%s\n" %(gid, seqs_dict[gid][0], end)
- #                  print line 
+            #convert all strings to floating numbers, if the start is less than the start of a previous domain for the particular protein 
+            if float(seqs_dict[gid][0]) < float(start):
+                #convert all strings to floating numbers
+                #if the end is greater than the end on record
+                if float(seqs_dict[gid][1])> float(end):
+#                  #overwrite current value for the key, include the new start,new ending, and add one to the number of domains.
                    seqs_dict[gid]=[seqs_dict[gid][0],seqs_dict[gid][1],seqs_dict[gid][2]+1]
-               else:
-  #                 print "%s\t%s\t%s\n" %(gid,seqs_dict[gid][0],end)
-   #                print line
+                #else if the end is less than what is in the current value associated with the GID key
+                else:
+                   #overwrite the value associated with the key included in the new value include the new start position, the same end position, and add +1 to the number of domains. 
                    seqs_dict[gid]=[seqs_dict[gid][0],end,seqs_dict[gid][2]+1]
-           else:
-               if float(seqs_dict[gid][1])> float(end):
-    #               print "%s\t%s\t%s\n" %(gid, start, end)
-     #              print line 
+            #if the start is greater than the one listed for the gid
+            else:
+                #if end position is larger than the current position
+                if float(seqs_dict[gid][1])> float(end):
+                    #overwrite value for GID with same start, new end, add plus one for domain
                    seqs_dict[gid]=[start,seqs_dict[gid][1],seqs_dict[gid][2]+1]
-               else:
-      #             print "%s\t%s\t%s\n" %(gid,start,end)
-       #            print line
+                #if end position is less than the current one. 
+                else:
+                   #The value for GID will still be over written but the start and end will stay the same and the only change will be the +1 for number of domains.
                    seqs_dict[gid]=[start,end,seqs_dict[gid][2]+1]
-                   
-                         
-               
-    
+        #if GID not in dict
         else:
-            #n= number of domains
+            #n= number of domains which as far as we know the protein has at least one.
             n = 1
+            #we input the GID key and its value into the dictionary, the value is a list with [start, end, n]
             seqs_dict[gid] = [start, end, n]
-
-
-#print seqs_dict
-
 #md = multiple domains
+#create a blank dictionary will put seqs with multiple and single domains in here
 seqs_dict_md= {}
 #sd = single domains
+#create a blank dictionary and will put seqs with just single domains in here.
 seqs_dict_sd = {}
-
+#loop through seqs_dict
 for gid in seqs_dict:
+    #if only one domain
     if seqs_dict[gid][2] == 1:
+        #add key and value pair to both the seqs_dict_sd and the seqs_dict_md dicts
         seqs_dict_sd[gid]= seqs_dict[gid]
         seqs_dict_md[gid]= seqs_dict[gid]
+    #else if the seqs have more than one domain just add to the seqs_dict_md dictionary
     elif seqs_dict[gid][2] > 1:
         seqs_dict_md[gid]= seqs_dict[gid]
 
 
-#print 'multiple domains'
-#print seqs_dict_md
-#print 'single domains'
-#print seqs_dict_sd
+#STOPPED HERE
 
 #first will work on seqs in multiple domain library. Then on the single domain.
 #order in dict is: gid is key, start, end, # domains, nterm, cterm, taxid
 seqs_dict_md_2 = {}
 seqs_dict_sd_2 = {}
-'''
+
 for gid in seqs_dict_md:
     p = Popen(['blastdbcmd', '-db', 'nr', '-dbtype', 'prot', '-entry', gid, '-target_only','-outfmt', '%t\t%s'],stdout = PIPE)
     stdout = p.stdout.read()
@@ -149,12 +148,8 @@ fasta_cterm_md.close()
 fasta_nterm_sd.close()
 fasta_cterm_sd.close()
 
-'''
-
-
 #one issue with script if I have two results it considers it two domains. Still need to figure out a way to weed out duplicates. Maybe ask if domains overlap or something before I start looking at number of domains. 
 #Found one instance where tyrosinase domains are the same just off by one domain and another instance where two domains are called but overlap maybe two domains that overlap or something.
-
 
 #run with md seqs first
 #clustalo
@@ -164,7 +159,7 @@ clustalo_nterm_md = Popen(['time', 'clustalo', '-i', '%s_nterm_multiple_domains_
 clustalo_nterm_md.communicate()
 print 'done clustalo_nterm_md'
 
-'''
+
 #run fasttree
 print 'done with clustalo'
 print 'Begin FastTreeMP'
@@ -176,4 +171,3 @@ FastTreeMP.communicate()
 newick_out.close()
 print 'Done with FastTreeMP'
 
-'''
