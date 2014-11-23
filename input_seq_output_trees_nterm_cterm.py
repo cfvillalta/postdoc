@@ -75,62 +75,51 @@ for gid in seqs_dict:
         #add key and value pair to both the seqs_dict_sd and the seqs_dict_md dicts
         seqs_dict_sd[gid]= seqs_dict[gid]
         seqs_dict_md[gid]= seqs_dict[gid]
-    #else if the seqs have more than one domain just add to the seqs_dict_md dictionary
-    elif seqs_dict[gid][2] > 1:
+        #else if the seqs have more than one domain just add to the seqs_dict_md dictionary
+	elif seqs_dict[gid][2] > 1:
         seqs_dict_md[gid]= seqs_dict[gid]
-
-
-#STOPPED HERE
 
 #first will work on seqs in multiple domain library. Then on the single domain.
 #order in dict is: gid is key, start, end, # domains, nterm, cterm, taxid
 seqs_dict_md_2 = {}
 seqs_dict_sd_2 = {}
-
+#loop through each gid key in seqs_dict_md
 for gid in seqs_dict_md:
+	#subprocess blastdbcmd from the ncbi blast package. gid goes in and full seq along with taxonomic infomration output. 
     p = Popen(['blastdbcmd', '-db', 'nr', '-dbtype', 'prot', '-entry', gid, '-target_only','-outfmt', '%t\t%s'],stdout = PIPE)
+	#output is read into stdout
     stdout = p.stdout.read()
+	#wait for subprocess to complete. 
     p.communicate()
+   #if there is a std out.
     if stdout:
+		#strip whitespace
         stdout=stdout.strip()
+		#split stdout by \t into list called stdout_split.  
         stdout_split = stdout.split("\t")
+		#get start position for gid in  multiple domain dict. 
         start = seqs_dict_md[gid][0]
+		#get end position for gid in  multiple domain dict.
         end = seqs_dict_md[gid][1]
         #I did -1 because its one less since its python and its also one less because the start number is the start of the tyrosinase domain. Check by looking at output.
+        #get the n terminus sequence. 
         nterm = stdout_split[1][0:int(start)-1]
-        #cterm is just end because if I subtract 1 i get what end is.
+        #Get the ctern sequence. cterm is just end because if I subtract 1 i get what end is.
         cterm = stdout_split[1][int(end):]
+        #to seqs_dict_md_2 use the gid as the key and have the start and end of the domain, number of domains, the nterm seq, cterm seq, and taxonomic information. only multiple domains. 
         seqs_dict_md_2[gid]= [seqs_dict_md[gid][0],seqs_dict_md[gid][1],seqs_dict_md[gid][2],nterm,cterm,stdout_split[0]]
-#        seqs_dict_md[gid].append(nterm)
-#        seqs_dict_md[gid].append(cterm)
-#        seqs_dict_md[gid].append(stdout_split[0])
-#        print gid
-#        print stdout_split[1]
-#        print nterm
-#        print end 
-#        print cterm
+        #if the gid only has a single domain and is in seqs_dict_sd.
         if gid in seqs_dict_sd:
+            #get the nterm sequence before the single domain.
             nterm = stdout_split[1][0:int(start)-1]
+            #get the cterm sequence after the single domain
             cterm = stdout_split[1][int(end):]
+            #for the GID key value will be list of  start of domain end of domain and number of domains nterm seq cterm seq and the taxonomic information.
             seqs_dict_sd_2[gid]= [seqs_dict_sd[gid][0],seqs_dict_sd[gid][1],seqs_dict_sd[gid][2],nterm,cterm,stdout_split[0]]
- #           seqs_dict_sd[gid].append(nterm)
- #           seqs_dict_sd[gid].append(cterm)
- #           seqs_dict_sd[gid].append(stdout_split[0])
-            #        print gid
-            #        print stdout_split[1]
-            #        print nterm
-            #        print end 
-            #        print cterm
-
+    #if no stdout
     else:
+        #pass and go onto next GID
         pass
-#        del seqs_dict_md[gid]
-#        if gid in seqs_dict_sd:
-#            del seqs_dict_sd[gid]
-
-#print seqs_dict_md
-#print seqs_dict_sd
-
 #outpout md and sd sequence files for nterm and cterm
 fasta_nterm_md = open('%s_nterm_multiple_domains_unaligned.fasta'%(file_split[0]),'w')
 fasta_cterm_md = open('%s_cterm_multiple_domains_unaligned.fasta'%(file_split[0]),'w')
