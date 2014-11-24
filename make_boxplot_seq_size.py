@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-#input files and get a size of the seq and make box plots from it also output the quartiles and median. So I know where to make cutoffs.
-
+#input files and get a size of the seq and make box plots from it also output the quartiles and median. So I know where to make cutoffs. The script was created because i was having and issue with the nterm seqs and wanted to know their size distribution, because some proteins have no nterm seqs or they are very small. 
 import sys
 import re
 
