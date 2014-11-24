@@ -121,17 +121,27 @@ for gid in seqs_dict_md:
         #pass and go onto next GID
         pass
 #outpout md and sd sequence files for nterm and cterm
+#open a new file where multiple domain nterm sequences will be written
 fasta_nterm_md = open('%s_nterm_multiple_domains_unaligned.fasta'%(file_split[0]),'w')
+#open a file where multiple domain cterm sequences will be written
 fasta_cterm_md = open('%s_cterm_multiple_domains_unaligned.fasta'%(file_split[0]),'w')
+#open a file where single domain n term seqs will be written.
 fasta_nterm_sd = open('%s_nterm_single_domain_unaligned.fasta'%(file_split[0]),'w')
+#open a file where single domain cterm seqs will be written.  
 fasta_cterm_sd = open('%s_cterm_single_domain_unaligned.fasta'%(file_split[0]),'w')
-
+#loop through each gid key in the second md dict which jas seq info.
 for gid in seqs_dict_md_2:
-    fasta_nterm_md.write(">%s\n%s\n" %(gid, seqs_dict_md_2[gid][3]))
-    fasta_cterm_md.write(">%s\n%s\n" %(gid, seqs_dict_md_2[gid][4]))
-    if gid in seqs_dict_sd_2:
-        fasta_nterm_sd.write(">%s\n%s\n" %(gid, seqs_dict_sd_2[gid][3]))
-        fasta_cterm_sd.write(">%s\n%s\n" %(gid, seqs_dict_sd_2[gid][4]))
+	#write nterm seq to nterm md file
+	fasta_nterm_md.write(">%s\n%s\n" %(gid, seqs_dict_md_2[gid][3]))
+	#write cterm seq to md cterm file
+	fasta_cterm_md.write(">%s\n%s\n" %(gid, seqs_dict_md_2[gid][4]))
+	#if gid in sd library
+	if gid in seqs_dict_sd_2:
+		#write nterm to sd nterm file.
+		fasta_nterm_sd.write(">%s\n%s\n" %(gid, seqs_dict_sd_2[gid][3]))
+		#write cterm seq to sd cterm file. 
+		fasta_cterm_sd.write(">%s\n%s\n" %(gid, seqs_dict_sd_2[gid][4]))
+#close all four fasta files, done writing seqs to files. 
 fasta_nterm_md.close()
 fasta_cterm_md.close()
 fasta_nterm_sd.close()
@@ -141,22 +151,29 @@ fasta_cterm_sd.close()
 #Found one instance where tyrosinase domains are the same just off by one domain and another instance where two domains are called but overlap maybe two domains that overlap or something.
 
 #run with md seqs first
-#clustalo
+#tell user clustalo beginning
 print 'begin clustalo_nterm_md'
+#name of fasts file being aligned
 print '%s_nterm_multiple_domains_unaligned.fasta' %(file_split[0])
+#run clustal omega as subpricess in python on unaligned multi domain seqs. output aligned seqs in fasta format.
 clustalo_nterm_md = Popen(['time', 'clustalo', '-i', '%s_nterm_multiple_domains_unaligned.fasta' %(file_split[0]), '-o', '%s_nterm_multople_domains_aligned_clustalo.fa' %(file_split[0]), '--force'])
+#wait for subprocess to finish before moving on in thr script. 
 clustalo_nterm_md.communicate()
+#let the user know that clustsl omega is done running. 
 print 'done clustalo_nterm_md'
-
-
-#run fasttree
+#let user know done with the clustal portion. 
 print 'done with clustalo'
+#begin fasttreemp
 print 'Begin FastTreeMP'
+#run fasttreemp as a subprocress in python. output newick formatted tree. it will be under stdout where the readout is piped into. 
 FastTreeMP = Popen(['FastTreeMP', '-quiet', '-nopr', '-log', '%s.log' %(aligned_fasta_file_split[0]), '%s_aligned_clustalo.fa' %(aligned_fasta_file_split[0])],stdout=PIPE)
 newick_out = open("%s_clustalo.newick" %(aligned_fasta_file_split[0]), 'w')
+opena file where the newic formatted output will be written. 
 newick_out.write(FastTreeMP.stdout.read())
-
+#wait until subprocess is done before proceeding. 
 FastTreeMP.communicate()
+close newick file because stopped being written into. 
 newick_out.close()
+#let user know they are done with the script.  
 print 'Done with FastTreeMP'
 
