@@ -49,72 +49,84 @@ boxplot_data = []
 tyrs = {}
 #another empty dictionary to place data in by tyrosinase
 growth_by_tyr = {}
+#for each sample in data
 for tyr in data:
-    tyr_light = "%s_light" %(data[tyr][2])
+	#add type of tyr underscore light and make new string
+    tyr_light = "%s_light" %(data[tyr][2]
+	#add type of tyr underscore dark and make new string  
     tyr_dark = "%s_dark" %(data[tyr][2])
+	#make tyr light a key with empty string value
     tyrs[tyr_light]= ""
+	#make tyr dark a key with empty string value 
     tyrs[tyr_dark]= ""
+	#add tyr light as key to dixtionary with empty list. 
     growth_by_tyr[tyr_light] = []
+	#add tyr light as key to dixtionary with empty list. 
     growth_by_tyr[tyr_dark] = []
-#STOPPED HERE
-#lengths grouped by tyrosinases
+#loop through tyr in tyrs
 for tyr in tyrs:
-    for sample in data:
-        # print sample
-        #print tyr
-        if tyr == "%s_light" %(data[sample][2]):
-            #growth_by_tyr[tyr] = append [data[sample]] 
-            growth_by_tyr[tyr].append(float(data[sample][3]))
-            #print sample
+	#loop through each sample in data. 
+	for sample in data:
+        #if genotype in tyr same as the genotype from data. 
+		if tyr == "%s_light" %(data[sample][2]):
+            #for tyr append growth data as floating point number
+			growth_by_tyr[tyr].append(float(data[sample][3]))
+        #else if tyr is equal to the growth rate of tyr in dark
         elif tyr == "%s_dark" %(data[sample][2]):
+			#add growth data for tyr growing in dark. 
             growth_by_tyr[tyr].append(float(data[sample][5]))
-            
+#open blank list called tyr sorted. where i will put tyrs sorted alphabetically.           
 tyr_sorted = []
+#open blank list where i will lut growth rate numbers in by the alphabetical order of the correspondinf tyrs. 
 tyr_growth_sorted = []
+#open blank list where i will put tyr bioreps data.  
 tyr_bioreps = []
+#to tyr sorted list add a blank string. this is to make sure labels will look correct when graphed. 
 tyr_sorted.append("")
-#print growth_by_tyr
 
 import random
+#set num integer to zero tonuse as a counter in loop
 num = 0
+#loop through sorted growth_by_tyr
 for x in sorted(growth_by_tyr):
+	#for each iteration add one to num
     num = num+1
+	#print the num
     print num
+	#add tyr to tyr_sorted list, now tyrs are ordered. 
     tyr_sorted.append(x)
-    tyr_growth_sorted.extend(growth_by_tyr[x])
+#get data from dict with key and add to tyr_growth_sorted. 
+   tyr_growth_sorted.extend(growth_by_tyr[x])
+	#measure how many bioreos for each condition
     bioreps = len(growth_by_tyr[x])
+	#set x axis range for data a is the max and b is the min distance
     a=num-.15
     b=num+.15
-    x_axis = [random.uniform(a,b) for p in range(0, bioreps)]
+	#make a list of random numbers called x axis, amount of numbers in list dependent on number of bioreps. 
+    x_axis = [random.uniform(a,b) for p in range(0, bioreps)
+	#add x-axis list to tyr_bioreps
     tyr_bioreps.extend(x_axis)
-    #print tyr_bioreps
-    #print tyr_sorted
-    #print tyr_growth_sorted
-
-
-
+#create figure and set size. 
 fig = plt.figure(1, figsize=(9, 6))
+#add plot to figure
 ax = fig.add_subplot(111)
-## Custom x-axis labels
-ax.set_xticklabels(tyr_sorted)
-
+#set Custom x-axis labels using tyr_sorted list. have labels be vertical at 90 degrees. 
 ax.set_xticklabels(tyr_sorted, rotation =90)
+#label y axis
 ax.set_ylabel('radial growth in cm')
+#label x-axis
 ax.set_xlabel('tyroinase knockdowns grown in light or dark')
+#type of graph
 ax = plt.gca()
-#ax.set_autoscale_on(False)
-
-
-fig.savefig('fig1.png', bbox_inches='tight')
+#make layout tight no extra space. 
 plt.tight_layout()
+#save to png with filepath and name similar to file input but different extension. in this case png. 
 boxplot_name = "%s.png" %(file_name_split_2[0])
 fig.savefig(boxplot_name)
-
-
+#min and max of y axis. 
 plt.axis(ymin=0,ymax=10)
+#plot data to graph
 plt.plot(tyr_bioreps, tyr_growth_sorted, 'ro')
+#show graph. 
 plt.show()
-
-
-#I want to count lengths of list in growth by tyr dict.
 
