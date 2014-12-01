@@ -24,11 +24,21 @@ for line in csv:
         #strip line of whitespace
         line = line.strip()
         #split line into list by commas
-        lines = line.split(",")
+        lines = line.split(",") 
+        #see if the number below is a float
+        try:
         #add cfus from plates plated with 3000 spores to cfu_3000 list.
-        cfu_3000.append(float(lines[1]))
+            cfu_3000.append(float(lines[1]))
+        #if number not a float then pass do not add to list
+        else:
+            pass
+        #try to see if number is a float
+        try:
         #add cfus from plates plated with 300 spores to cfu_300 list.
-        cfu_300.append(float(lines[2]))
+            cfu_300.append(float(lines[2]))
+        #if number is not a float then pass, do not add to list.
+        else:
+            pass
 #add each data set to dictionary called data.
 data[3000]=cfu_3000
 data[300]=cfu_300    
