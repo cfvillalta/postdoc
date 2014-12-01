@@ -16,7 +16,7 @@ cfu_300 = []
 #list called cfu 300 for data from plates plated with 3000 conidia
 cfu_3000 = []
 #labels for graph
-labels = [' ',' ','300',' ','3000']
+labels = [' ',' ','300_BHI',' ','300_HMM',' ','3000_BHI']
 #loop through csv list
 for line in csv:
     #if line starts with pCV we know its a sample
@@ -30,19 +30,22 @@ for line in csv:
         #add cfus from plates plated with 3000 spores to cfu_3000 list.
             cfu_3000.append(float(lines[1]))
         #if number not a float then pass do not add to list
-        else:
+        except(ValueError):
             pass
         #try to see if number is a float
         try:
         #add cfus from plates plated with 300 spores to cfu_300 list.
             cfu_300.append(float(lines[2]))
         #if number is not a float then pass, do not add to list.
-        else:
+        except(ValueError):
             pass
-#add each data set to dictionary called data.
-data[3000]=cfu_3000
-data[300]=cfu_300    
-
+#add each data set to dictionary of dictionaries called data. Subdictionary will have media information and a list with cfu counts.
+data[300]={}
+data[3000]={}
+data[3000]['BHI']=cfu_3000
+data[300]['HMM']=cfu_300[:3]
+data[300]['BHI']=cfu_300[3:7]   
+print data
 ##############
 #organzing data for graphing
 ##############
@@ -56,26 +59,31 @@ y_axis_points = []
 x_axis_points= []
 #loop though sorted data dictionary
 for x in sorted(data):
+    #loop through dictionaries within dictionary.
+    for media in data[x]:
     #get median of each set of conidia data using numpy
-    median = np.median(data[x])
+        median = np.median(data[x][media])
     #print the median 
-    print "median %s" %(median)
+        print "For media %s and %s spores plated the median was %s" %(media, x,median)
     #print percentage of total cfu from the original amount of spores plated.
-    print "percentage of total = %s" %(100*(median/x))
+        print "percentage of total = %s" %(100*(median/x))
     #add one to counter for each key/condition
-    num = num+1
+        num = num+1
     #number of bioreps for each conidition
-    bioreps = 3
+        bioreps = 3
     #min x-axis range
-    a=num-.15
+        a=num-.15
     #max x-axis range
-    b=num+.15
+        b=num+.15
     #assign random numbers between the min a and max b for the number of bioreps
-    x_axis = [random.uniform(a,b) for p in range(0, bioreps)]
+        x_axis = [random.uniform(a,b) for p in range(0, bioreps)]
     #add the x-axis points to the list x_axis_points
-    x_axis_points.extend(x_axis)
+        x_axis_points.extend(x_axis)
     #add y-axis points, e.g. cfu counts from the data dictionary to the list y axis points.
-    y_axis_points.extend(data[x])
+        y_axis_points.extend(data[x][media])
+
+print x_axis_points
+print y_axis_points
 
 import wx
 import matplotlib as mpl
