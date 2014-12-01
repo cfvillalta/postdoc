@@ -313,10 +313,11 @@ for x in dotplot_data:
     x_axis_points.extend(x_axis)
     #y axis points are just the numbers present in each list x.
     y_axis_points.extend(x)
+print num
 ############
 #plotting the graph
 ############
-
+print condition_list
 import wx
 import matplotlib as mpl
 mpl.use('WXAgg')
@@ -328,8 +329,9 @@ fig = plt.figure()
 ax = fig.add_subplot(111)
 #create axes on graph
 ax=plt.gca()
+ax.set_xticks(np.arange(0,(num+1),1))
 #set labels for x asis using the list of conditions have them be upright
-ax.set_xticklabels(condition_list, rotation =90)
+ax.set_xticklabels(condition_list,rotation =90)
 #set the min and max of the x and y axis.
 plt.axis(ymin=0,ymax=10,xmin=0,xmax=num+1)
 #plot the points for the x and y axis
