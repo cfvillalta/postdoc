@@ -1,12 +1,13 @@
-#! /usr/bin/python
+#!/usr/bin/env/python
 
 import sys
-# get filepath for ´comma delimited csv with tyr data.
+#get filepath for comma delimited csv with tyr data.
 growth_data = sys.argv[1]
 #split filepath by backslash
 file_name_split = growth_data.split("/")
 #split filepath by . to separate filepath from extension.
-file_name_split_2 = file_name_split[6].split(".")
+print file_name_split
+file_name_split_2 = file_name_split[5].split(".")
 #open csv file
 fh = open(growth_data)
 #read lines into list called csv.
@@ -101,7 +102,7 @@ for x in sorted(growth_by_tyr):
     b=num+.15
     #add random number of x axis coordinated between the min a and max b corresponding to the number of bioreps.
     x_axis = [random.uniform(a,b) for p in range(0, bioreps)]
-    add list of x_axis cordinated to the tyr_bioreps list.
+    #add list of x_axis cordinated to the tyr_bioreps list.
     tyr_bioreps.extend(x_axis)
 #make new figure
 fig = plt.figure(1, figsize=(9, 6))
@@ -119,8 +120,10 @@ ax = plt.gca()
 plt.tight_layout()
 #filepath for .png file where plot data will be drawn
 boxplot_name = "%s.png" %(file_name_split_2[0])
+#set the number of xticks
+ax.set_xticks(np.arange(0,(num+1),1))
 #y axis min and max
-plt.axis(ymin=0,ymax=10)
+plt.axis(ymin=0,ymax=10,xmin=0, xmax=num+1)
 #plot the graph with the data in brackets
 plt.plot(tyr_bioreps, tyr_growth_sorted, 'ro')
 #save plot to .png file
