@@ -78,18 +78,26 @@ for tyr in tyrs:
         data_to_plot["%s_%s" %(tyr, cond)]= []
 #make a list called conditions list with an empty string in it. Will appened more later, have an empty string in there for graph formatting purposes.
 condition_list = ['']
+#want to reorder things with micro then macro conidia data
+condition_list_micro = []
+condition_list_macro = []
 #loop though dict of tyrs, but sorted
 for tyr in sorted(tyrs):
     #loop through subdictionary.
     for cond in tyrs[tyr]:
         #add to the list the type of microcondia conditions e.g. tyr1_light_microconidia
-        condition_list.append('%s_%s_microconidia' %(tyr,cond))
+        condition_list_micro.append('%s_%s_microconidia' %(tyr,cond))
         #add to the list the type of macrocondia conditions e.g. tyr1_light_macroconidia
-        condition_list.append('%s_%s_macroconidia' %(tyr,cond))
+        condition_list_macro.append('%s_%s_macroconidia' %(tyr,cond))
+#orders data by micro and macro and makes it easier to read.
+condition_list.extend(condition_list_micro)
+condition_list.extend(condition_list_macro)
 
 import numpy as np
 #make blank list called dotplot data
 dotplot_data=[]
+dotplot_data_micro=[]
+dotplot_data_macro=[]
 #sort dict and then loop through it.
 for name in sorted(data_to_plot.keys()):
     #split by underscore
@@ -123,7 +131,7 @@ for name in sorted(data_to_plot.keys()):
                     else:
                         add_list.append(log10_sample)
     #appenend list to list called dotplot_data. Now a list of lists.
-    dotplot_data.append(add_list)
+    dotplot_data_micro.append(add_list)
     #overwrite add_list with an empty list.
     add_list=[]                    
 
@@ -141,8 +149,11 @@ for name in sorted(data_to_plot.keys()):
                         add_list.append(0)
                     else:
                         add_list.append(log10_sample)
-    dotplot_data.append(add_list)
+    dotplot_data_macro.append(add_list)
 
+#orders data by micro and macro easier to read
+dotplot_data.extend(dotplot_data_micro)
+dotplot_data.extend(dotplot_data_macro)
 ####################
 #2 way annova
 #looking at 2 conditions wheter light and dark make a difference or if genotype makes a difference.
